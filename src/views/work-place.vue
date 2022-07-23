@@ -4,6 +4,7 @@
   <p>这样才是响应式的{{totalNum.actionTimes}}</p>
   <button @click="totalNum.increment">+1</button>
   <button @click="totalNum.decrement">-1</button>
+  <router-link to="/test-upload">前往测试切片上传</router-link>
 </template>
 
 <script>

@@ -1,5 +1,18 @@
 # 搭建一个简单的低代码平台
 
+## 运行
+
+```bash
+$ npm ci
+安装依赖包
+
+$ npm run koa-server
+启动后台
+
+$ npm run serve
+启动前端
+```
+
 ## 具体要求
 
 需求：要求开发一个 Web 页面编辑器，支持通过拖拽方式编辑页面内容并生成最终可视页面，核心功能：
@@ -10,3 +23,7 @@
 
 需求来自: [青训营](https://bytedance.feishu.cn/docx/doxcnLxmR5PMdZlENJ3VbgMDT4d)
 
+## 项目使用的相关库
+
+* easy-file-uploader-client
+* easy-file-uploader-server

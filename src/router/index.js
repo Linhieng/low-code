@@ -18,6 +18,10 @@ const routes = [
     component: () => import(/* webpackChunkName: "preview" */ '../views/preview.vue')
   },
   {
+    path: '/test-upload',
+    component: () => import(/* webpackChunkName: "test-upload" */ '../views/test-upload.vue')
+  },
+  {
     path: '/:pathMatch(.*)*',
     component: No,
   },
