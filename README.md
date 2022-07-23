@@ -25,5 +25,8 @@ $ npm run serve
 
 ## 项目使用的相关库
 
-* easy-file-uploader-client
-* easy-file-uploader-server
+* vue3
+* vue-router
+* pinia
+* axios
+* easy-file-uploader
