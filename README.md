@@ -1,19 +1,12 @@
-# code
+# 搭建一个简单的低代码平台
 
-## Project setup
-```
-yarn install
-```
+## 具体要求
 
-### Compiles and hot-reloads for development
-```
-yarn serve
-```
+需求：要求开发一个 Web 页面编辑器，支持通过拖拽方式编辑页面内容并生成最终可视页面，核心功能：
 
-### Compiles and minifies for production
-```
-yarn build
-```
+* 支持 button、图片、视频、文本、链接等基础组件
+* 支持自定义组件动作(单击、双击等)逻辑
+* 支持页面预览与发布
 
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+需求来自: [青训营](https://bytedance.feishu.cn/docx/doxcnLxmR5PMdZlENJ3VbgMDT4d)
+
