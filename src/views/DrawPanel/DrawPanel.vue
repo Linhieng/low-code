@@ -27,7 +27,7 @@
 
 <script>
 export default {
-  name:'DrawPanel',
+  name:'DrawPanel', 
   props:{
     dataList:{
         type:Array
