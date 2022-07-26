@@ -66,6 +66,7 @@ export default {
   width: 700px;
   background: rgb(246, 229, 229);
   backdrop-filter: blur(4px);
+  overflow: hidden;
 }
 .zindex{
     z-index: -1000;
