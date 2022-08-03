@@ -3,7 +3,7 @@ import No from '../views/404.vue'
 
 const routes = [{
         path: '/',
-        redirect: '/work-place',
+        redirect: '/Father',
     },
     {
         // 工作区, 用于创建页面
