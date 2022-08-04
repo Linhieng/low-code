@@ -19,10 +19,10 @@ export default defineStore('dragTempStyle', {
     // “组件按钮” 的宽高
     btnWidth: '',
     btnHeight: '',
-    // pageX: '', // 这个值经常变化, 可以不选择存入 state 中
-    // pageY: '', // 这个值经常变化, 可以不选择存入 state 中
-    // top: '', // 这个值经常变化, 可以不选择存入 state 中
-    // left: '', // 这个值经常变化, 可以不选择存入 state 中
+    // pageX: '', // 这个值经常变化, 不存入 stores 中
+    // pageY: '', // 这个值经常变化, 不存入 stores 中
+    // top: '', // 这个值经常变化, 不存入 stores 中
+    // left: '', // 这个值经常变化, 不存入 stores 中
 
     // 不带单位, 因为它不会单独使用, 而是会参与计算
     topTmp: 0,

@@ -1,7 +1,6 @@
 <template>
   <div id="left">
     <div class="component-item" v-for="(elementType, i) in ELEMENT_TYPES" :key="i" :id="elementType.id" draggable="true" @dragstart="dragstart($event, elementType.value)">{{ elementType.description }}</div>
-    <!-- <div id="text" draggable="true" @dragstart="dragstart">文本组件</div> -->
   </div>
   <div id="draw" ref="drawWrapper" @drop="drop" @dragover="dragover" @dragenter="dragenter" @dragleave="dragleave">
     <div ref="shadowComponent" id="shadow-component"></div>
@@ -69,7 +68,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-
 .component-item {
   // 宽高在 id.scss 中配置
   display: flex;
@@ -88,5 +86,4 @@ export default {
     cursor: grabbing;
   }
 }
-
 </style>
