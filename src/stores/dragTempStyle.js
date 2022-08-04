@@ -6,6 +6,8 @@ import { ELEMENT_LAYOUT } from '@/constants/index'
 export default defineStore('dragTempStyle', {
   // 这些值都会带上单位
   state: () => ({
+    // 当前拖拽元素类型
+    type: '',
     // 影子的宽高
     width: '',
     height: '',
@@ -31,7 +33,8 @@ export default defineStore('dragTempStyle', {
   }),
   actions: {
     dragStart(elementType, componentElement, drawElement, x, y) {
-      console.log('debugger: ', elementType, componentElement, drawElement, x, y)
+      this.type = elementType
+
       const { width, height } = ELEMENT_LAYOUT[elementType]
       this.width = width
       this.height = height
