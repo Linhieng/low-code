@@ -1,7 +1,7 @@
 // 新建组件，拖拽时的临时的数据会保存这里
 import { defineStore } from 'pinia'
-
 import { ELEMENT_LAYOUT } from '@/constants/index'
+import { useWorkPlaceRefs } from '@/stores/index'
 
 export default defineStore('dragTempStyle', {
   // 这些值都会带上单位
@@ -32,14 +32,16 @@ export default defineStore('dragTempStyle', {
     limitLeft: 0,
   }),
   actions: {
-    dragStart(elementType, componentElement, drawElement, x, y) {
+    dragStart(elementType, componentElement, x, y) {
+      const drawWrapper = useWorkPlaceRefs().drawWrapper
+
       this.type = elementType
 
       const { width, height } = ELEMENT_LAYOUT[elementType]
       this.width = width
       this.height = height
 
-      const { top: drawTop, left: drawLeft, width: drawWidth } = window.getComputedStyle(drawElement)
+      const { top: drawTop, left: drawLeft, width: drawWidth } = window.getComputedStyle(drawWrapper)
       this.drawTop = drawTop
       this.drawLeft = drawLeft
       this.drawWidth = drawWidth

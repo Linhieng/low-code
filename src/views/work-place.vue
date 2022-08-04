@@ -1,27 +1,22 @@
 <template>
-  <div id="left">
-    <button class="btn-item" @click="tmp">临时按钮</button>
-    <div class="btn-item" v-for="(elementType, i) in ELEMENT_TYPES" :key="i" :id="elementType.id" draggable="true" :data-type="elementType.value" @dragstart="dragstart($event, elementType.value)">{{ elementType.description }}</div>
-  </div>
+  <Left />
   <div id="draw" ref="drawWrapper" @drop="drop($event)" @dragover="dragover" @dragenter="dragenter" @dragleave="dragleave">
     <div ref="shadowComponent" id="shadow-component"></div>
   </div>
 </template>
 
 <script>
-import { ELEMENT_TYPES } from '@/constants/index'
-import { useDragTempStyleStore, useDrawData, useDrawRefs } from '@/stores/index'
+import { useDragTempStyleStore, useDrawData, useWorkPlaceRefs } from '@/stores/index'
+import Left from '@/components/work-place/Left.vue'
 
 export default {
   data() {
     return {
       dragStyle: useDragTempStyleStore(),
       drawData: useDrawData(),
-      drawRefs: useDrawRefs(),
-      ELEMENT_TYPES,
+      workPlaceRefs: useWorkPlaceRefs(),
     }
   },
-
   methods: {
     getTop(pageY) {
       let Y = pageY - this.dragStyle.topTmp
@@ -33,11 +28,6 @@ export default {
       if (X < 0) X = 0
       if (X >= this.dragStyle.limitLeft) X = this.dragStyle.limitLeft
       return X + 'px'
-    },
-
-    dragstart(e, elementType) {
-      console.log('debugger: 点击拖拽')
-      this.dragStyle.dragStart(elementType, e.target, this.$refs.drawWrapper, e.offsetX, e.offsetY)
     },
     dragenter(e) {
       console.log('debugger: 进入')
@@ -60,13 +50,11 @@ export default {
     drop(e) {
       console.log('debugger: 放下')
       this.$refs.shadowComponent.removeAttribute('style')
-
       const type = this.dragStyle.type
       const width = this.dragStyle.width
       const height = this.dragStyle.height
       const top = this.getTop(e.pageY)
       const left = this.getLeft(e.pageX)
-
       const div = document.createElement('div')
       div.classList.add('component-item')
       div.style.width = width
@@ -74,15 +62,14 @@ export default {
       div.style.top = top
       div.style.left = left
       this.$refs.drawWrapper.appendChild(div)
-
       this.drawData.add(type, width, height, top, left, div)
     },
-
-    tmp() {
-      const div = this.drawRefs.refs[0].element
-      console.log('debugger: ', div)
-    },
   },
+  mounted() {
+    this.workPlaceRefs.addDrawWrapper(this.$refs.drawWrapper)
+    this.workPlaceRefs.addShadowComponent(this.$refs.shadowComponent)
+  },
+  components: { Left },
 }
 </script>
 
