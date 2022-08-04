@@ -1,5 +1,6 @@
 <template>
   <div id="left">
+    <button class="btn-item" @click="tmp">临时按钮</button>
     <div class="btn-item" v-for="(elementType, i) in ELEMENT_TYPES" :key="i" :id="elementType.id" draggable="true" :data-type="elementType.value" @dragstart="dragstart($event, elementType.value)">{{ elementType.description }}</div>
   </div>
   <div id="draw" ref="drawWrapper" @drop="drop($event)" @dragover="dragover" @dragenter="dragenter" @dragleave="dragleave">
@@ -9,13 +10,14 @@
 
 <script>
 import { ELEMENT_TYPES } from '@/constants/index'
-import { useDragTempStyleStore, useDrawData } from '@/stores/index'
+import { useDragTempStyleStore, useDrawData, useDrawRefs } from '@/stores/index'
 
 export default {
   data() {
     return {
       dragStyle: useDragTempStyleStore(),
       drawData: useDrawData(),
+      drawRefs: useDrawRefs(),
       ELEMENT_TYPES,
     }
   },
@@ -32,9 +34,28 @@ export default {
       if (X >= this.dragStyle.limitLeft) X = this.dragStyle.limitLeft
       return X + 'px'
     },
+
     dragstart(e, elementType) {
       console.log('debugger: 点击拖拽')
       this.dragStyle.dragStart(elementType, e.target, this.$refs.drawWrapper, e.offsetX, e.offsetY)
+    },
+    dragenter(e) {
+      console.log('debugger: 进入')
+      const shadowComponent = this.$refs.shadowComponent
+      shadowComponent.style.opacity = 1
+      shadowComponent.style.width = this.dragStyle.width
+      shadowComponent.style.height = this.dragStyle.height
+      shadowComponent.style.top = this.getTop(e.pageY)
+      shadowComponent.style.left = this.getLeft(e.pageX)
+    },
+    dragover(e) {
+      e.preventDefault()
+      this.$refs.shadowComponent.style.top = this.getTop(e.pageY)
+      this.$refs.shadowComponent.style.left = this.getLeft(e.pageX)
+    },
+    dragleave() {
+      console.log('debugger: 离开')
+      this.$refs.shadowComponent.removeAttribute('style')
     },
     drop(e) {
       console.log('debugger: 放下')
@@ -54,25 +75,12 @@ export default {
       div.style.left = left
       this.$refs.drawWrapper.appendChild(div)
 
-      this.drawData.add(type, width, height, top, left)
+      this.drawData.add(type, width, height, top, left, div)
     },
-    dragenter(e) {
-      console.log('debugger: 进入')
-      const shadowComponent = this.$refs.shadowComponent
-      shadowComponent.style.opacity = 1
-      shadowComponent.style.width = this.dragStyle.width
-      shadowComponent.style.height = this.dragStyle.height
-      shadowComponent.style.top = this.getTop(e.pageY)
-      shadowComponent.style.left = this.getLeft(e.pageX)
-    },
-    dragover(e) {
-      e.preventDefault()
-      this.$refs.shadowComponent.style.top = this.getTop(e.pageY)
-      this.$refs.shadowComponent.style.left = this.getLeft(e.pageX)
-    },
-    dragleave() {
-      console.log('debugger: 离开')
-      this.$refs.shadowComponent.removeAttribute('style')
+
+    tmp() {
+      const div = this.drawRefs.refs[0].element
+      console.log('debugger: ', div)
     },
   },
 }
