@@ -17,9 +17,17 @@ export default defineStore('workPlaceRefs', {
     },
     addLeft(ref) {
       this.left = ref
+      // 页面滚动时，就会更新容器的高度，确保效果和 fix 一样
+      window.addEventListener('scroll', _ => {
+        ref.style.top = window.scrollY + 'px'
+      })
     },
     addRight(ref) {
       this.right = ref
+      // 页面滚动时，就会更新容器的高度，确保效果和 fix 一样
+      window.addEventListener('scroll', _ => {
+        ref.style.top = window.scrollY + 'px'
+      })
     },
   },
 })

@@ -2,7 +2,7 @@
   <div id="top">
     <div>
       <input @click="drawConfig.toggleAutoHeight" type="checkbox" id="autoHeight" :checked="drawConfig.autoHeight" />
-      <label @click="drawConfig.toggleAutoHeight">自动增加高度</label>
+      <label @click="drawConfig.toggleAutoHeight">开启高度自适应</label>
     </div>
   </div>
 </template>

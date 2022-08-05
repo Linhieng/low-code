@@ -1,6 +1,8 @@
 <template>
   <div id="draw" ref="drawWrapper" @drop="drop($event)" @dragover="dragover" @dragenter="dragenter" @dragleave="dragleave">
     <div ref="shadowComponent" id="shadow-component"></div>
+    <div id="upBox"></div>
+    <div id="downBox"></div>
   </div>
 </template>
 
@@ -30,52 +32,29 @@ export default {
       return X + 'px'
     },
     checkDrawTop(pageY) {
-      console.log('debugger: ', pageY)
       if (!this.drawConfig.autoHeight) return
 
-      // NOTE: 重复计算了
-      let top = pageY - this.dragStyle.topTmp
-      if (top < 0) top = 0
-
+      // NOTE: 此处 shadowTop 就算为负数也不影响
+      const shadowTop = pageY - this.dragStyle.topTmp
       const shadowHeight = Number.parseFloat(this.dragStyle.height)
-      const drawHeight = this.dragStyle.drawHeight
       const drawTop = Number.parseFloat(this.dragStyle.drawTop)
+      const drawHeight = this.dragStyle.drawHeight
+      const drawBottom = drawHeight - shadowTop - shadowHeight
+      const pageTop = shadowTop - window.scrollY
+      const pageBottom = window.innerHeight - drawTop - pageTop - shadowHeight
 
-      const drawBottom = drawHeight - top - shadowHeight
-      const pageBottom = window.innerHeight - drawTop - top - shadowHeight
-      // console.log('debugger: ', pageBottom)
       if (pageBottom <= 100) {
-        const app = window
-
-        if (this.scrollTime !== null) return
-        this.scrollTime = {}
-
-        console.log('debugger: ', app.scrollTop, this.$refs.shadowComponent.style.top)
-
-        app.scroll({ top: app.scrollTop + 100 })
-        const t = Number.parseFloat(this.$refs.shadowComponent.style.top)
-        this.$refs.shadowComponent.style.top = t + 100 + 'px'
-
-        console.log('debugger: ', app.scrollTop, this.$refs.shadowComponent.style.top)
-        setTimeout(() => {
-          console.log('debugger: ', app.scrollTop, this.$refs.shadowComponent.style.top)
-        }, 1000)
-      } else {
-        clearInterval(this.scrollTime)
-        this.scrollTime = null
+        if (drawBottom <= 100) {
+          this.$refs.drawWrapper.style.height = drawHeight + 100 + 'px'
+          this.dragStyle.updateDrawHeight(drawHeight + 100)
+        }
+        window.scrollTo(0, window.scrollY + 10)
+      } else if (pageTop <= 100) {
+        window.scrollTo(0, window.scrollY - 10)
       }
-      // let newDrawHeight = drawHeight
-      // if (drawBottom <= 100) newDrawHeight += 300
-
-      // // console.log('debugger: ', top, shadowHeight, wrapHeight, bottom)
-      // if (newDrawHeight !== drawHeight) {
-      //   this.dragStyle.updateDrawHeight(newDrawHeight, pageY)
-      // }
-      // // console.log('debugger: ', wrapHeight)
-      // return newDrawHeight + 'px'
     },
     dragenter(e) {
-      console.log('debugger: 进入')
+      console.log('hook: 进入')
       const shadowComponent = this.$refs.shadowComponent
       shadowComponent.style.opacity = 1
       shadowComponent.style.zIndex = 99
@@ -91,11 +70,11 @@ export default {
       this.checkDrawTop(e.pageY)
     },
     dragleave() {
-      console.log('debugger: 离开')
+      console.log('hook: 离开')
       this.$refs.shadowComponent.removeAttribute('style')
     },
     drop(e) {
-      console.log('debugger: 放下')
+      console.log('hook: 放下')
       this.$refs.shadowComponent.removeAttribute('style')
       const type = this.dragStyle.type
       const width = this.dragStyle.width
