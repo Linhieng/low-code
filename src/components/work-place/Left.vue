@@ -1,5 +1,6 @@
 <template>
   <div ref="left" id="left">
+    <h2>组件添加栏</h2>
     <div class="btn-item" v-for="(elementType, i) in ELEMENT_TYPES" :key="i" :id="elementType.id" draggable="true" :data-type="elementType.value" @dragstart="dragstart($event, elementType.value)">{{ elementType.description }}</div>
   </div>
 </template>

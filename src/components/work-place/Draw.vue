@@ -1,15 +1,25 @@
 <template>
   <div id="draw" ref="drawWrapper" @drop="drop($event)" @dragover="dragover" @dragenter="dragenter" @dragleave="dragleave">
     <div ref="shadowComponent" id="shadow-component"></div>
+    <!-- TODO: 这两个可用作提示, 先简单处理 -->
     <div id="upBox"></div>
     <div id="downBox"></div>
+    <!-- NOTE: id 是数字类型, 如果后面改了, 记得修改子组件中 props 中的验证 -->
+    <component v-for="ele in drawData.elementArr" :id="ele.id" :key="ele.id" :is="ele.type"></component>
   </div>
 </template>
 
 <script>
 import { useDragTempStyleStore, useDrawData, useWorkPlaceRefs, useDrawConfig } from '@/stores/index'
 
+import ElementText from '@/components/drawElement/ElementText.vue'
+import ElementButton from '@/components/drawElement/ElementButton.vue'
+import ElementImage from '@/components/drawElement/ElementImage.vue'
+import ElementLink from '@/components/drawElement/ElementLink.vue'
+import ElementVideo from '@/components/drawElement/ElementVideo.vue'
+
 export default {
+  components: { ElementText, ElementButton, ElementImage, ElementLink, ElementVideo },
   data() {
     return {
       dragStyle: useDragTempStyleStore(),
@@ -77,19 +87,20 @@ export default {
     drop(e) {
       console.log('hook: 放下')
       this.$refs.shadowComponent.removeAttribute('style')
-      const type = this.dragStyle.type
-      const width = this.dragStyle.width
-      const height = this.dragStyle.height
-      const top = this.getTop(e.pageY)
-      const left = this.getLeft(e.pageX)
-      const div = document.createElement('div')
-      div.classList.add('component-item')
-      div.style.width = width
-      div.style.height = height
-      div.style.top = top
-      div.style.left = left
-      this.$refs.drawWrapper.appendChild(div)
-      this.drawData.add(type, width, height, top, left, div)
+      // const type = this.dragStyle.type
+      // const width = this.dragStyle.width
+      // const height = this.dragStyle.height
+      // const top = this.getTop(e.pageY)
+      // const left = this.getLeft(e.pageX)
+      // const div = document.createElement('div')
+      // div.classList.add('component-item')
+      // div.style.width = width
+      // div.style.height = height
+      // div.style.top = top
+      // div.style.left = left
+      // this.$refs.drawWrapper.appendChild(div)
+      // this.drawData.add(type, width, height, top, left, div)
+      this.drawData.add(this.dragStyle.type, this.getTop(e.pageY), this.getLeft(e.pageX))
     },
   },
   mounted() {
@@ -100,9 +111,17 @@ export default {
 </script>
 
 <style lang="scss">
-.component-item {
+// 不要使用 scoped, 因为 .ele-item 用于子组件中
+
+.ele-item {
   // 宽高在 id.scss 中配置
   position: absolute;
   box-shadow: 0 0 10px 0px #ddd;
+  cursor: pointer;
+}
+
+// 选中某个元素（修改配置）
+.ele-active {
+  box-shadow: 0 0 10px 0px skyblue;
 }
 </style>

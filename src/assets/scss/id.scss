@@ -19,8 +19,10 @@ $draw-width: 1200px;
   height      : 600px;
   padding     : 30px 0;
   margin-top  : $top-height;
+
   box-sizing  : border-box;
   border-right: 1px solid #aaa;
+  background-color: #FFF;
 
   position: absolute;
   z-index : 3;
@@ -59,7 +61,7 @@ $draw-width: 1200px;
 #draw {
   width     : calc($draw-width - 20px);
   height    : auto;
-  min-height: 100vh;
+  min-height: calc(100vh - $top-height);
   overflow  : hidden;
   position  : absolute;
   top       : $top-height;
@@ -108,5 +110,6 @@ $draw-width: 1200px;
 
   box-sizing : border-box;
   border-left: 1px solid #aaa;
+  background-color: #FFF;
   @include show-right;
 }
