@@ -1,41 +1,103 @@
-// 在此处统一配置一些 id 相关的样式
+// 因为此项目页面不多，但又要分模块，而每个模块基本独立（不复用），故在此处统一配置 id 相关的样式更加方便。
+
+$top-height: 100px;
+$left-width: 300px;
+$draw-width: 800px;
+:root::-webkit-scrollbar {
+  // 隐藏底部宽度
+  // height: 0;
+}
+
+#top {
+  position: fixed;
+  z-index: 5;
+  left: 0;
+  width: 100%;
+  height: calc($top-height - 20px);
+  background-color: #FFFFFF99;
+  box-shadow: 1px 0 10px 0 #DDD;
+}
+
 #left {
-  width: 180px;
-  height: 100vh;
-  padding: 30px 0;
+  width       : calc($left-width - 20px);
+  height      : 600px;
+  padding     : 30px 0;
+  margin-top: $top-height;
+  box-sizing: border-box;
   border-right: 1px solid #aaa;
 
-  position: fixed;
-  top: 30px;
-  left: 0;
+  position: absolute;
+  z-index : 3;
+  top     : 0;
+  left    : 0;
+
+
+  // 这些 id 和 constants/index 中的 ELEMENT_TYPES 对应
+  #btn-text {
+    width : 150px;
+    height: 40px;
+  }
+
+  #btn-button {
+    width : 110px;
+    height: 35px;
+  }
+
+  #btn-image {
+    width : 80px;
+    height: 80px;
+  }
+
+  #btn-link {
+    width          : 120px;
+    height         : 30px;
+    text-decoration: underline;
+  }
+
+  #btn-video {
+    width : 150px;
+    height: 150px;
+  }
 }
 
 #draw {
-  position: absolute;
-  background: #fff;
-  top: 30px;
-  left: 200px;
-  width: 800px;
-  height: auto;
+  width     : calc($draw-width - 20px);
+  height    : auto;
   min-height: 100vh;
-  overflow:hidden;
+  overflow  : hidden;
+  position  : absolute;
+  top       : $top-height;
+  left      : $left-width;
+  z-index   : 1;
+  background: #fff;
   box-shadow: 0 0 10px 0px #ddd;
+
+  height: 1600px;
+  #shadow-component {
+    width     : 101%;
+    height    : 101%;
+    position  : absolute;
+    z-index   : 0;
+    opacity   : 0;
+    top       : 0;
+    left      : 0;
+    box-shadow: 0 0 10px 0px #ddd;
+  }
 }
 
-#shadow-component {
-  width: 101%;
-  height: 101%;
+#right {
   position: absolute;
-  z-index: 0;
-  opacity: 0;
-  top: 0;
-  left: 0;
-  box-shadow: 0 0 10px 0px #ddd;
+  z-index : 3;
+  top     : 0;
+  left   : calc(($left-width + $draw-width));
+
+  width     : calc(100% - $left-width - $draw-width);
+  // min-width: 300px;
+  height: 600px;
+  margin-top: $top-height;
+
+  box-sizing: border-box;
+  border-left: 1px solid #aaa;
+  @include show-right;
 }
 
-// 这些 id 和 constants/index 中的 ELEMENT_TYPES 对应
-#btn-text{ width: 150px; height: 40px; }
-#btn-button{ width: 110px; height: 35px; }
-#btn-image{ width: 80px; height: 80px; }
-#btn-link{ width: 120px; height: 30px; text-decoration:underline;}
-#btn-video{ width: 150px; height: 150px; }

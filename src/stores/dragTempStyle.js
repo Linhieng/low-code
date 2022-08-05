@@ -15,6 +15,7 @@ export default defineStore('dragTempStyle', {
     drawTop: '',
     drawLeft: '',
     drawWidth: '',
+    drawHeight: 0, // 当高度不够时会自动增加, 该值不会直接使用, 所以不带单位
     // 鼠标距离 “组件按钮” 的边距
     offsetX: '',
     offsetY: '',
@@ -41,10 +42,11 @@ export default defineStore('dragTempStyle', {
       this.width = width
       this.height = height
 
-      const { top: drawTop, left: drawLeft, width: drawWidth } = window.getComputedStyle(drawWrapper)
+      const { top: drawTop, left: drawLeft, width: drawWidth, height: drawHeight } = window.getComputedStyle(drawWrapper)
       this.drawTop = drawTop
       this.drawLeft = drawLeft
       this.drawWidth = drawWidth
+      this.drawHeight = Number.parseFloat(drawHeight)
 
       const { width: btnWidth, height: btnHeight } = window.getComputedStyle(componentElement)
       this.btnWidth = btnWidth
@@ -56,6 +58,9 @@ export default defineStore('dragTempStyle', {
       this.topTmp = Number.parseFloat(drawTop) + y + (Number.parseFloat(height) - Number.parseFloat(btnHeight)) / 2
       this.leftTmp = Number.parseFloat(drawLeft) + x + (Number.parseFloat(width) - Number.parseFloat(btnWidth)) / 2
       this.limitLeft = Number.parseFloat(drawWidth) - Number.parseFloat(width)
+    },
+    updateDrawHeight(height) {
+      this.drawHeight = height
     },
   },
 })

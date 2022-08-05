@@ -3,6 +3,8 @@ import { defineStore } from 'pinia'
 
 export default defineStore('workPlaceRefs', {
   state: () => ({
+    left: null,
+    right: null,
     drawWrapper: null,
     shadowComponent: null,
   }),
@@ -12,6 +14,12 @@ export default defineStore('workPlaceRefs', {
     },
     addShadowComponent(ref) {
       this.shadowComponent = ref
+    },
+    addLeft(ref) {
+      this.left = ref
+    },
+    addRight(ref) {
+      this.right = ref
     },
   },
 })
