@@ -69,9 +69,10 @@ export default {
       this.$refs.shadowComponent.style.left = this.getLeft(e.pageX)
       this.checkDrawTop(e.pageY)
     },
-    dragleave() {
-      console.log('hook: 离开')
-      this.$refs.shadowComponent.removeAttribute('style')
+    dragleave(e) {
+      console.log('hook: 离开', e.target.id)
+      // NOTE: 该判断条件用于判断鼠标是否离开画布区域。此处不保证无 bug
+      if (e.target.id === 'shadow-component') this.$refs.shadowComponent.removeAttribute('style')
     },
     drop(e) {
       console.log('hook: 放下')

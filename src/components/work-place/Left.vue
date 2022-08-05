@@ -18,7 +18,7 @@ export default {
   },
   methods: {
     dragstart(e, elementType) {
-      console.log('debugger: 点击拖拽')
+      console.log('hook: 点击拖拽')
       this.dragStyle.dragStart(elementType, e.target, e.offsetX, e.offsetY)
     },
   },
