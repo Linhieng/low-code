@@ -25,5 +25,9 @@ export default defineStore('drawData', {
         },
       }
     },
+    update(id, style, config) {
+      this.elementConfig[id].style = style
+      this.elementConfig[id].config = config
+    },
   },
 })

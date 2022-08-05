@@ -1,0 +1,152 @@
+// 这个文件的内容是独立的, 这样复用起来方便
+
+#my-msg {
+  width: 300px;
+
+  position : fixed;
+  z-index  : 99999;
+  left     : 50%;
+  top      : 10px;
+  transform: translateX(-50%);
+
+  display       : flex;
+  flex-direction: column;
+  align-items   : center;
+
+  .message {
+    width        : 300px;
+    height       : 0px;
+    border-bottom: 50px solid #edf2fc;
+    margin-bottom: 10px;
+
+    position       : relative;
+    display        : flex;
+    justify-content: center;
+
+    background-color: #edf2fc;
+
+    animation-name           : fadeIn;
+    animation-duration       : .3s;
+    animation-timing-function: ease-in-out;
+
+    p {
+      position   : absolute;
+      top        : 15px;
+      line-height: 1;
+      font-size  : 14px;
+      color      : #909399;
+      opacity    : 1;
+      cursor: default;
+    }
+
+    //  成功提示框样式
+    &.success {
+      background-color: #e1f3d8;
+      border-color    : #e1f3d8;
+
+      p {
+        color: #67c23a;
+      }
+    }
+
+    //  错误提示框样式
+    &.error {
+      background-color: #fef0f0;
+      border-color    : #fef0f0;
+
+      p {
+        color: #f56c6c;
+      }
+    }
+
+    //  警告提示框样式
+    &.warning {
+      background-color: #fdfce6;
+      border-color    : #fdfce6;
+
+      p {
+        color: #e6a23c;
+      }
+    }
+
+  }
+
+  .fadeOut {
+    animation-name           : fadeOut;
+    animation-timing-function: linear;
+    animation-duration       : .3s;
+    animation-fill-mode      : forwards;
+
+    p {
+      animation-name           : pFadeOut;
+      animation-timing-function: linear;
+      animation-duration       : .3s;
+      animation-fill-mode      : forwards;
+    }
+  }
+
+
+}
+
+@keyframes pFadeOut {
+  0% {
+    transform: translateY(0);
+    opacity  : 1;
+  }
+
+  90% {
+    opacity  : 0;
+    transform: translateY(-120%);
+  }
+
+  100% {
+    opacity  : 0;
+    transform: translateY(-200%);
+  }
+
+}
+
+@keyframes fadeOut {
+  0% {
+    transform          : translateY(0);
+    opacity            : 1;
+    height             : 0px;
+    border-bottom-width: 50px;
+    margin-bottom      : 10px;
+  }
+
+  70% {
+    opacity: .5;
+  }
+
+  98% {
+    opacity            : 0;
+    height             : 0;
+    margin-bottom      : 0;
+    border-bottom-width: 0px;
+  }
+
+  100% {
+    opacity            : 0;
+    height             : 0;
+    margin-bottom      : 0;
+    border-bottom-width: 0px;
+    transform          : translateY(-100%);
+  }
+}
+
+@keyframes fadeIn {
+  0% {
+    transform: translateY(-100%);
+    opacity  : 0;
+  }
+
+  30% {
+    opacity: 1;
+  }
+
+  100% {
+    transform: translateY(0);
+    opacity  : 1;
+  }
+}

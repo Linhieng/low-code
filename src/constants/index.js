@@ -78,7 +78,10 @@ export const ELEMENT_STYLE = {
   },
   [ELEMENT_BUTTON]: {
     ...ELEMENT_STYLE_TOGETHER,
-    backgroundColor: '',
+    backgroundColor: '#FFF',
+    textAlign: 'center',
+    lineHeight: '40px',
+    color: '#666',
   },
   [ELEMENT_IMAGE]: {
     ...ELEMENT_STYLE_TOGETHER,
