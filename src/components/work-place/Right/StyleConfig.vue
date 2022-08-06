@@ -16,6 +16,10 @@
       <p class="property">left: {{ styleList.left }}</p>
       <input @input="modifyNumber('left', $event.currentTarget.value)" class="value" type="range" :value="Number.parseFloat(styleList.left)" :min="styleLimit.left.min" :max="styleLimit.left.max" />
     </div>
+    <div v-if="styleList.fontSize" class="modify-item">
+      <p class="property">font-size: {{ styleList.fontSize }}</p>
+      <input @input="modifyNumber('fontSize', $event.currentTarget.value)" class="value" type="range" :value="Number.parseFloat(styleList.fontSize)" :min="styleLimit.fontSize.min" :max="styleLimit.fontSize.max" />
+    </div>
   </div>
 </template>
 

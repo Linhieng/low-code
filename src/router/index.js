@@ -12,10 +12,9 @@ const routes = [
     component: () => import(/* webpackChunkName: "work-place" */ '../views/work-place.vue'),
   },
   {
-    // TODO: 这一块不确定, 后续可能会改为发布后可看到的正式界面, 因为预览功能, 可以集成在“工作区”
-    // 预览正在创建的页面
-    path: '/preview',
-    component: () => import(/* webpackChunkName: "preview" */ '../views/preview.vue'),
+    // 发布页面
+    path: '/page/:id',
+    component: () => import(/* webpackChunkName: "page" */ '../views/page.vue'),
   },
   /* ========= tmp start ========== */
   {
