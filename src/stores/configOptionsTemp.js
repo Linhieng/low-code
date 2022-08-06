@@ -30,6 +30,10 @@ const limitFunction = {
       enumOptions: ['left', 'center', 'right'],
     }
   },
+  color() {
+    // 颜色倒是没什么需要限制的, 但是该属性还是得存在
+    return {}
+  },
 }
 
 // 存储当前正在修改配置的可配置项

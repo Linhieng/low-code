@@ -8,3 +8,13 @@ export function debounce(func, timeout = 300) {
     }, timeout)
   }
 }
+
+function numTo16(num) {
+  num = Number.parseInt(num)
+  if (num === 0) return '00'
+  if (num < 16) return '0' + num.toString(16).toUpperCase()
+  return num.toString(16).toUpperCase()
+}
+export function rgb2Hex(rgb) {
+  return '#' + numTo16(rgb[0]) + numTo16(rgb[1]) + numTo16(rgb[2])
+}

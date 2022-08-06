@@ -4,38 +4,53 @@
       <p class="property">width: {{ styleList.width }}</p>
       <input @input="modify('width', $event.currentTarget.value + 'px')" class="value" type="range" :value="Number.parseFloat(styleList.width)" :min="styleLimit.width.min" :max="styleLimit.width.max" />
     </div>
+
     <div v-if="styleList.height" class="modify-item">
       <p class="property">height: {{ styleList.height }}</p>
       <input @input="modify('height', $event.currentTarget.value + 'px')" class="value" type="range" :value="Number.parseFloat(styleList.height)" :min="styleLimit.height.min" :max="styleLimit.height.max" />
     </div>
+
     <div v-if="styleList.top" class="modify-item">
       <p class="property">top: {{ styleList.top }}</p>
       <input @input="modify('top', $event.currentTarget.value + 'px')" class="value" type="range" :value="Number.parseFloat(styleList.top)" :min="styleLimit.top.min" :max="styleLimit.top.max" />
     </div>
+
     <div v-if="styleList.left" class="modify-item">
       <p class="property">left: {{ styleList.left }}</p>
       <input @input="modify('left', $event.currentTarget.value + 'px')" class="value" type="range" :value="Number.parseFloat(styleList.left)" :min="styleLimit.left.min" :max="styleLimit.left.max" />
     </div>
+
     <div v-if="styleList.fontSize" class="modify-item">
       <p class="property">font-size: {{ styleList.fontSize }}</p>
       <input @input="modify('fontSize', $event.currentTarget.value + 'px')" class="value" type="range" :value="Number.parseFloat(styleList.fontSize)" :min="styleLimit.fontSize.min" :max="styleLimit.fontSize.max" />
     </div>
+
     <div v-if="styleList.textAlign" class="modify-item">
       <p class="property">text-align: {{ styleList.textAlign }}</p>
       <ul class="ul-value">
         <li v-for="(option, i) in styleLimit.textAlign.enumOptions" :key="i" :class="{ active: styleList.textAlign === option }" @click="modify('textAlign', option)">{{ option }}</li>
       </ul>
     </div>
+
+    <div v-if="styleList.color" class="modify-item">
+      <p class="property">color: {{ styleList.color }}</p>
+      <div class="value">
+        <ColorPicker v-model="color" />
+      </div>
+    </div>
   </div>
 </template>
 
 <script>
 import { useConfigOptionsTemp } from '@/stores/index'
+import ColorPicker from '@/components/ColorPicker.vue'
 
 export default {
+  components: { ColorPicker },
   data() {
     return {
       configOption: useConfigOptionsTemp(),
+      color: '#000',
     }
   },
   computed: {
