@@ -25,6 +25,11 @@ const limitFunction = {
   fontSize() {
     return { min: 12, max: 40 }
   },
+  textAlign() {
+    return {
+      enumOptions: ['left', 'center', 'right'],
+    }
+  },
 }
 
 // 存储当前正在修改配置的可配置项
@@ -58,8 +63,9 @@ export default defineStore('configOptionsTemp', {
       this.show = false
       this.id = -1
     },
-    modifyNumber(property, value) {
-      this.style[property] = value + 'px'
+    modify(property, value) {
+      // 单位包含在 value 中了
+      this.style[property] = value
     },
   },
 })

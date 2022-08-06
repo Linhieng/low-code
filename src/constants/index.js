@@ -79,8 +79,8 @@ export const ELEMENT_STYLE = {
   [ELEMENT_BUTTON]: {
     ...ELEMENT_STYLE_TOGETHER,
     fontSize: '16px',
+    textAlign: 'center',
     // backgroundColor: '#FFF',
-    // textAlign: 'center',
     // lineHeight: '40px',
     // color: '#666',
   },
