@@ -100,6 +100,8 @@ export const ELEMENT_STYLE = {
   },
   [ELEMENT_VIDEO]: {
     ...ELEMENT_STYLE_TOGETHER,
+    objectFit: 'none',
+    objectPosition: 'center',
   },
 }
 export const ELEMENT_CONFIG = {
@@ -118,6 +120,9 @@ export const ELEMENT_CONFIG = {
     url: '',
   },
   [ELEMENT_VIDEO]: {
-    url: '',
+    videoSrc: '',
+    poster: '',
+    // NOTE: muted 属性是无法通过 v-bind 设置的, 想要设置应该通过 DOM 进行操作
+    muted: true,
   },
 }

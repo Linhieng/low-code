@@ -38,6 +38,16 @@ const limitFunction = {
       enumOptions: ['left', 'center', 'right'],
     }
   },
+  objectFit() {
+    return {
+      enumOptions: ['contain', 'cover', 'fill', 'none', 'scale-down'],
+    }
+  },
+  objectPosition() {
+    return {
+      enumOptions: ['top', 'bottom', 'center', 'left', 'right'],
+    }
+  },
 
   // 颜色没什么需要限制的, 因为使用取色板, 但是该属性还是得存在
 

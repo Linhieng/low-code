@@ -1,0 +1,120 @@
+<template>
+  <div class="update-image">
+    <div class="btn" @click="show = !show">选择视频</div>
+    <div v-show="show" ref="updateBox" class="update-box">
+      <div class="area">
+        <video v-show="previewSrc !== ''" :src="previewSrc" muted autoplay>错误</video>
+        <span>
+          点击上传视频
+          <br />
+          或者拖拽视频这里来
+        </span>
+        <input ref="input" @change="change" type="file" accept="video/*" placeholder="上传图片到这里来" />
+      </div>
+      <div class="config">
+        <button class="btn-submit">点击上传</button>
+      </div>
+    </div>
+  </div>
+</template>
+
+<script>
+export default {
+  emits: ['update:modelValue'],
+  props: ['modelValue'],
+  data() {
+    return {
+      previewSrc: '',
+      show: false,
+    }
+  },
+  methods: {
+    change() {
+      console.log('debugger: ')
+      this.previewSrc = window.URL.createObjectURL(this.$refs.input.files[0])
+      this.$emit('update:modelValue', this.previewSrc)
+    },
+  },
+  watch: {
+    show() {
+      this.previewSrc = ''
+      this.$emit('update:modelValue', this.previewSrc)
+    },
+  },
+}
+</script>
+
+<style lang="scss">
+.update-image {
+  width: 150px;
+  height: 40px;
+  position: absolute;
+
+  .btn {
+    width: 100%;
+    height: 100%;
+    display: grid;
+    place-content: center;
+    font-size: 16px;
+    background-color: #fff;
+    border-radius: 4px;
+    border: 1px solid #d1d1d1;
+    cursor: pointer;
+  }
+
+  .update-box {
+    width: 350px;
+    height: 280px;
+
+    position: absolute;
+    bottom: calc(100% + 10px);
+    left: -100px;
+    padding: 20px;
+    box-sizing: border-box;
+    background-color: #fff;
+    box-shadow: 0 0 10px 0 #aaa;
+
+    .area {
+      width: 100%;
+      height: 200px;
+      display: grid;
+      place-content: center;
+      border: 1px dashed skyblue;
+      position: relative;
+      span {
+        text-align: center;
+        font-size: 20px;
+        color: #999;
+      }
+      input[type='file'] {
+        width: 100%;
+        height: 100%;
+        opacity: 0;
+        cursor: pointer;
+        position: absolute;
+        z-index: 2;
+      }
+
+      video {
+        width: 100%;
+        height: 100%;
+        position: absolute;
+        z-index: 0;
+        top: 0;
+        left: 0;
+        object-fit: cover;
+      }
+    }
+    .config {
+      width: 100%;
+      height: 60px;
+      display: flex;
+      align-items: center;
+      button {
+        width: 100px;
+        height: 34px;
+      }
+    }
+  }
+}
+</style>
