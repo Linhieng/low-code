@@ -5,7 +5,7 @@
     <div id="upBox"></div>
     <div id="downBox"></div>
     <!-- NOTE: id 是数字类型, 如果后面改了, 记得修改子组件中 props 中的验证 -->
-    <component v-for="ele in drawData.elementArr" :id="ele.id" :key="ele.id" :is="ele.type"></component>
+    <component draggable="true" v-for="ele in drawData.elementArr" :id="ele.id" :key="ele.id" :is="ele.type" @dragstart="dragstart($event, ele.id)"></component>
   </div>
 </template>
 
@@ -63,8 +63,13 @@ export default {
         window.scrollTo(0, window.scrollY - 10)
       }
     },
+    dragstart(e, id) {
+      console.log('hook: 点击拖拽(画布组件)', id)
+      this.dragStyle.drawDragStart(id, e.offsetX, e.offsetY)
+    },
     dragenter(e) {
       console.log('hook: 进入')
+      if (this.dragStyle.id !== -1) return
       const shadowComponent = this.$refs.shadowComponent
       shadowComponent.style.opacity = 1
       shadowComponent.style.zIndex = 99
@@ -75,9 +80,14 @@ export default {
     },
     dragover(e) {
       e.preventDefault()
-      this.$refs.shadowComponent.style.top = this.getTop(e.pageY)
-      this.$refs.shadowComponent.style.left = this.getLeft(e.pageX)
-      this.checkDrawTop(e.pageY)
+      if (this.dragStyle.id === -1) {
+        this.$refs.shadowComponent.style.top = this.getTop(e.pageY)
+        this.$refs.shadowComponent.style.left = this.getLeft(e.pageX)
+        this.checkDrawTop(e.pageY)
+      } else {
+        this.drawData.dragUpdate(this.dragStyle.id, this.getTop(e.pageY), this.getLeft(e.pageX))
+        this.checkDrawTop(e.pageY)
+      }
     },
     dragleave(e) {
       console.log('hook: 离开', e.target.id)
@@ -87,20 +97,12 @@ export default {
     drop(e) {
       console.log('hook: 放下')
       this.$refs.shadowComponent.removeAttribute('style')
-      // const type = this.dragStyle.type
-      // const width = this.dragStyle.width
-      // const height = this.dragStyle.height
-      // const top = this.getTop(e.pageY)
-      // const left = this.getLeft(e.pageX)
-      // const div = document.createElement('div')
-      // div.classList.add('component-item')
-      // div.style.width = width
-      // div.style.height = height
-      // div.style.top = top
-      // div.style.left = left
-      // this.$refs.drawWrapper.appendChild(div)
-      // this.drawData.add(type, width, height, top, left, div)
-      this.drawData.add(this.dragStyle.type, this.getTop(e.pageY), this.getLeft(e.pageX))
+      console.log('debugger: ', this.dragStyle.id)
+      if (this.dragStyle.id === -1) {
+        this.drawData.add(this.dragStyle.type, this.getTop(e.pageY), this.getLeft(e.pageX))
+      } else {
+        this.drawData.dragUpdate(this.dragStyle.id, this.getTop(e.pageY), this.getLeft(e.pageX))
+      }
     },
   },
   mounted() {

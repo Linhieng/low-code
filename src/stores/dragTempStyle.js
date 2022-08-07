@@ -1,11 +1,13 @@
 // 新建组件，拖拽时的临时的数据会保存这里
 import { defineStore } from 'pinia'
 import { ELEMENT_LAYOUT } from '@/constants/index'
-import { useWorkPlaceRefs } from '@/stores/index'
+import { useWorkPlaceRefs, useDrawData } from '@/stores/index'
 
 export default defineStore('dragTempStyle', {
   // 这些值都会带上单位
   state: () => ({
+    // 如果拖拽的是画布内的元素, 则会有 id
+    id: -1,
     // 当前拖拽元素类型
     type: '',
     // 影子的宽高
@@ -33,9 +35,31 @@ export default defineStore('dragTempStyle', {
     limitLeft: 0,
   }),
   actions: {
+    drawDragStart(id, x, y) {
+      const drawWrapper = useWorkPlaceRefs().drawWrapper
+      const drawData = useDrawData()
+
+      this.id = id
+      this.width = drawData.elementConfig[id].style.width
+      this.height = drawData.elementConfig[id].style.height
+
+      const { top: drawTop, left: drawLeft, width: drawWidth, height: drawHeight } = window.getComputedStyle(drawWrapper)
+      this.drawTop = drawTop
+      this.drawLeft = drawLeft
+      this.drawWidth = drawWidth
+      this.drawHeight = Number.parseFloat(drawHeight)
+
+      this.offsetX = x + 'px'
+      this.offsetY = y + 'px'
+
+      this.topTmp = Number.parseFloat(drawTop) + y
+      this.leftTmp = Number.parseFloat(drawLeft) + x
+      this.limitLeft = Number.parseFloat(drawWidth) - Number.parseFloat(this.width)
+    },
     dragStart(elementType, componentElement, x, y) {
       const drawWrapper = useWorkPlaceRefs().drawWrapper
 
+      this.id = -1
       this.type = elementType
 
       const { width, height } = ELEMENT_LAYOUT[elementType]
