@@ -3,31 +3,32 @@ import No from '../views/404.vue'
 
 const routes = [{
         path: '/',
-        redirect: '/Father',
+        redirect: '/work-place',
     },
     {
         // 工作区, 用于创建页面
         path: '/work-place',
         component: () =>
-            import ( /* webpackChunkName: "work-place" */ '../views/work-place.vue')
+            import ( /* webpackChunkName: "work-place" */ '../views/work-place.vue'),
     },
     {
-        // TODO: 这一块不确定, 后续可能会改为发布后可看到的正式界面, 因为预览功能, 可以集成在“工作区”
-        // 预览正在创建的页面
-        path: '/preview',
+        // 发布页面
+        path: '/page/:id',
         component: () =>
-            import ( /* webpackChunkName: "preview" */ '../views/preview.vue')
+            import ( /* webpackChunkName: "page" */ '../views/page.vue'),
     },
+    /* ========= tmp start ========== */
     {
         path: '/test-upload',
         component: () =>
-            import ( /* webpackChunkName: "test-upload" */ '../views/test-upload.vue')
+            import ( /* webpackChunkName: "test-upload" */ '../tmp/test-upload.vue'),
     },
     {
-        path: '/Father',
+        path: '/test-pinia',
         component: () =>
-            import ( /* webpackChunkName: "Father" */ '../views/DrawPanel/Father')
+            import ( /* webpackChunkName: "test-pinia" */ '../tmp/test-pinia.vue'),
     },
+    /* ========= tmp end========== */
     {
         path: '/:pathMatch(.*)*',
         component: No,
@@ -36,7 +37,7 @@ const routes = [{
 
 const router = createRouter({
     history: createWebHistory(),
-    routes
+    routes,
 })
 
 export default router

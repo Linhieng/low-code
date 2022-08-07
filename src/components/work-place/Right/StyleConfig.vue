@@ -1,6 +1,6 @@
 <template>
   <div class="modify-style">
-    <!-- rand -->
+    <!-- range -->
 
     <div v-if="styleList.width" class="modify-item">
       <p class="property">width: {{ styleList.width }}</p>
@@ -9,6 +9,7 @@
 
     <div v-if="styleList.height" class="modify-item">
       <p class="property">height: {{ styleList.height }}</p>
+      <div class="key-option" :class="{ active: styleList.height === 'auto' }" @click="modify('height', 'auto')">auto</div>
       <input @input="modify('height', $event.currentTarget.value + 'px')" class="value" type="range" :value="Number.parseFloat(styleList.height)" :min="styleLimit.height.min" :max="styleLimit.height.max" />
     </div>
 
@@ -93,13 +94,34 @@ export default {
 
   display: flex;
   align-items: center;
+  justify-content: space-between;
   flex-wrap: wrap;
 
   .property {
     margin-bottom: 6px;
   }
+  .key-option {
+    cursor: pointer;
+    width: 40px;
+    height: 24px;
+    line-height: 24px;
+    padding: 4px;
+    margin-right: 5px;
+    border-radius: 4px;
+    text-align: center;
+    border: 1px solid #d1d1d1;
+    color: #000;
+    background-color: #fff;
+
+    &.active {
+      background: skyblue;
+      color: #fff;
+      border-color: transparent;
+    }
+  }
   .value {
     width: 100%;
+    margin: 10px 0;
     display: flex;
     justify-content: center;
   }

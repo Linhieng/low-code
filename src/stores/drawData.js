@@ -25,6 +25,10 @@ export default defineStore('drawData', {
         },
       }
     },
+    dragUpdate(id, top, left) {
+      this.elementConfig[id].style.top = top
+      this.elementConfig[id].style.left = left
+    },
     update(id, style, config) {
       this.elementConfig[id].style = style
       this.elementConfig[id].config = config

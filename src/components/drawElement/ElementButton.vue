@@ -1,6 +1,6 @@
 <template>
-  <div v-if="configOptions.id === id" @click="modify" class="ele-item ele-active" :style="styleTemp">按钮组件{{ id }}</div>
-  <div v-else @click="modify" class="ele-item ele-video" :style="style">按钮组件{{ id }}</div>
+  <div v-if="configOptions.id === id" @click="modify" class="ele-item ele-active" :style="styleTemp">{{ configTemp.innerText }}</div>
+  <div v-else @click="modify" class="ele-item" :style="style">{{ config.innerText }}</div>
 </template>
 
 <script>
@@ -22,6 +22,12 @@ export default {
     },
     styleTemp() {
       return JSON.parse(JSON.stringify(this.configOptions.style))
+    },
+    config() {
+      return JSON.parse(JSON.stringify(this.drawData.elementConfig[this.id].config))
+    },
+    configTemp() {
+      return JSON.parse(JSON.stringify(this.configOptions.config))
     },
   },
   methods: {
