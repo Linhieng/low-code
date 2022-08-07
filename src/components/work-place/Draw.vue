@@ -5,12 +5,12 @@
     <div id="upBox"></div>
     <div id="downBox"></div>
     <!-- NOTE: id 是数字类型, 如果后面改了, 记得修改子组件中 props 中的验证 -->
-    <component draggable="true" v-for="ele in drawData.elementArr" :id="ele.id" :key="ele.id" :is="ele.type" @dragstart="dragstart($event, ele.id)"></component>
+    <component v-for="ele in drawData.elementArr" :id="ele.id" :key="ele.id" :is="ele.type" :draggable="configOptions.id !== ele.id" @dragstart="dragstart($event, ele.id)"></component>
   </div>
 </template>
 
 <script>
-import { useDragTempStyleStore, useDrawData, useWorkPlaceRefs, useDrawConfig } from '@/stores/index'
+import { useDragTempStyleStore, useDrawData, useWorkPlaceRefs, useDrawConfig, useConfigOptionsTemp } from '@/stores/index'
 
 import ElementText from '@/components/drawElement/ElementText.vue'
 import ElementButton from '@/components/drawElement/ElementButton.vue'
@@ -26,6 +26,7 @@ export default {
       drawData: useDrawData(),
       drawConfig: useDrawConfig(),
       workPlaceRefs: useWorkPlaceRefs(),
+      configOptions: useConfigOptionsTemp(),
       scrollTime: null,
     }
   },

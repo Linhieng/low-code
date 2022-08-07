@@ -73,8 +73,11 @@ const ELEMENT_STYLE_TOGETHER = { width: '', height: '', top: '', left: '' }
 export const ELEMENT_STYLE = {
   [ELEMENT_TEXT]: {
     ...ELEMENT_STYLE_TOGETHER,
-    color: '',
-    size: '',
+    fontSize: '16px',
+    textAlign: 'center',
+    color: '#666',
+    lineHeight: '40px',
+    backgroundColor: '#FFF',
   },
   [ELEMENT_BUTTON]: {
     ...ELEMENT_STYLE_TOGETHER,
@@ -89,6 +92,11 @@ export const ELEMENT_STYLE = {
   },
   [ELEMENT_LINK]: {
     ...ELEMENT_STYLE_TOGETHER,
+    fontSize: '16px',
+    textAlign: 'center',
+    color: '#666',
+    lineHeight: '40px',
+    backgroundColor: '#FFF',
   },
   [ELEMENT_VIDEO]: {
     ...ELEMENT_STYLE_TOGETHER,

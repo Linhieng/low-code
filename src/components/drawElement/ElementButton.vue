@@ -1,6 +1,6 @@
 <template>
   <div v-if="configOptions.id === id" @click="modify" class="ele-item ele-active" :style="styleTemp">{{ configTemp.innerText }}</div>
-  <div v-else @click="modify" class="ele-item ele-video" :style="style">{{ config.innerText }}</div>
+  <div v-else @click="modify" class="ele-item" :style="style">{{ config.innerText }}</div>
 </template>
 
 <script>
