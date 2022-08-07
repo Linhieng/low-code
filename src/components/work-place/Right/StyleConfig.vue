@@ -35,7 +35,7 @@
     <div v-if="styleList.color" class="modify-item">
       <p class="property">color: {{ styleList.color }}</p>
       <div class="value">
-        <ColorPicker v-model="color" />
+        <ColorPicker v-model="styleList.color" />
       </div>
     </div>
   </div>
@@ -63,7 +63,7 @@ export default {
   },
   methods: {
     modify(property, value) {
-      this.configOption.modify(property, value)
+      this.configOption.style[property] = value
     },
   },
 }

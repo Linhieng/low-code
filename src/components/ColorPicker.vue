@@ -1,6 +1,6 @@
 <template>
-  <div class="color-picker" @click.stop>
-    <div @click="show = !show" class="btn-box">
+  <div class="color-picker">
+    <div ref="btnBox" class="btn-box">
       <div class="btn">
         <svg v-show="show" t="1659799815661" class="show icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="2564" width="200" height="200"><path d="M512 224c184.736 0 340 122.368 384 288-44 165.632-199.264 288-384 288S172 677.632 128 512c44-165.632 199.264-288 384-288z m0 64c-147.008 0-274.464 92.544-317.28 224 42.816 131.456 170.24 224 317.28 224 147.008 0 274.464-92.544 317.28-224-42.816-131.456-170.24-224-317.28-224z m0 64a160 160 0 1 1 0 320 160 160 0 0 1 0-320z m0 64a96 96 0 1 0 0 192 96 96 0 0 0 0-192z" p-id="2565"></path></svg>
         <svg v-show="!show" t="1659799797479" class="hidden icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="2410" width="200" height="200"><path d="M512 224c86.784 0 167.072 27.008 232.384 72.832l80.576-60.736 38.528 51.104-68.608 51.712A380.576 380.576 0 0 1 896 512c-44 165.632-199.264 288-384 288-86.784 0-167.072-27.008-232.384-72.832L199.04 787.904l-38.528-51.104 68.608-51.712A380.576 380.576 0 0 1 128 512c44-165.632 199.264-288 384-288z m144.512 219.2a160 160 0 0 1-250.432 188.704l-72.128 54.368A341.12 341.12 0 0 0 512 736c147.008 0 274.464-92.544 317.28-224-15.68-48.128-45.472-93.536-86.144-134.08l-86.624 65.28zM512 288c-147.008 0-274.464 92.544-317.28 224a317.504 317.504 0 0 0 86.144 134.08l86.624-65.28a160 160 0 0 1 250.432-188.704l72.128-54.368A341.12 341.12 0 0 0 512 288z m-53.024 304.032A96 96 0 0 0 608 512c0-7.552-2.016-20.672-4.448-28.928L458.976 592zM512 416a96 96 0 0 0-91.552 124.928l144.576-108.96A95.552 95.552 0 0 0 512 416z" p-id="2411"></path></svg>
@@ -8,18 +8,20 @@
       <p>{{ modelValue }}</p>
       <span class="color-preview" :style="bgColor"></span>
     </div>
-    <div v-show="show" @click.stop class="panel">
+    <div ref="panel" v-show="show" class="panel">
       <div class="board" @mousedown="cursorDown">
-        <canvas ref="board" id="color-picker-board"></canvas>
-        <span ref="cursor" class="board__cursor"></span>
+        <canvas :ref="board" :id="board"></canvas>
+        <span :ref="cursor" class="board__cursor"></span>
       </div>
       <div class="slider">
-        <canvas ref="slider" id="color-picker-slider"></canvas>
-        <span class="slider__bar" @mousedown="barDown"></span>
+        <canvas :ref="slider" :id="slider"></canvas>
+        <span :ref="bar" class="slider__bar" @mousedown="barDown"></span>
       </div>
       <div class="bottom-config">
         <span class="color-preview" :style="previewColor"></span>
-        <input class="input-color" v-model="colorHex" />
+        <div class="input-color">
+          <input maxlength="6" @change="checkInput" v-model="inputColor" />
+        </div>
         <div class="autoSubmit">
           <label for="color-picker-autoSubmit">自动提交</label>
           <input @change="autoSubmit = !autoSubmit" type="checkbox" id="color-picker-autoSubmit" :checked="autoSubmit" />
@@ -31,57 +33,61 @@
 </template>
 
 <script>
-import { rgb2Hex } from '@/utils/index'
+import { isAinB, rgb2Hex } from '@/utils/index'
 
-function drawColorPickerBoard(id, rgb, width, height) {
-  const rateX = 1
-  const rateY = 1
-  const canvas = document.getElementById(id)
+// NOTE: canvas 面板的 id、宽高是写死的, 因为基本不会改变. 为了方便修改 canvas 的 id, 所以 id 直接在这外面定义了, 这个不仅仅可作为 ID, 还会作为 ref
+const board = 'canvas-id-board'
+const slider = 'canvas-id-slider'
+const cursor = 'canvas-board-cursor'
+const bar = 'canvas-slider-bar'
+
+function drawColorPickerBoard(rgb) {
+  const width = 280
+  const height = 180
+  const canvas = document.getElementById(board)
   const ctx = canvas.getContext('2d')
 
   canvas.width = width + 1
   canvas.height = height
-  canvas.style.width = width / rateX + 'px'
-  canvas.style.height = height / rateY + 'px'
+  canvas.style.width = width + 'px'
+  canvas.style.height = height + 'px'
 
-  // 渲染顺序为 上到下, 右到左。
   const rx_part = (0xff - rgb[0]) / width
   const gx_part = (0xff - rgb[1]) / width
   const bx_part = (0xff - rgb[2]) / width
+
   for (let x = 0; x <= width; x++) {
-    const rx = rgb[0] + rx_part * x
-    const gx = rgb[1] + gx_part * x
-    const bx = rgb[2] + bx_part * x
-    const ry_part = rx / height
-    const gy_part = gx / height
-    const by_part = bx / height
-    for (let y = 0; y < height; y++) {
-      ctx.fillStyle = `rgb(${rx - ry_part * y}, ${gx - gy_part * y}, ${bx - by_part * y})`
-      ctx.fillRect(width - x, y, 1, 1)
-    }
+    const gradient = ctx.createLinearGradient(0, 1, 0, height - 1)
+    gradient.addColorStop(0, `rgb(${rgb[0] + rx_part * x}, ${rgb[1] + gx_part * x}, ${rgb[2] + bx_part * x})`)
+    gradient.addColorStop(1, 'black')
+    ctx.fillStyle = gradient
+    ctx.fillRect(width - x, 0, 1, height)
   }
 
-  canvas.addEventListener('click', ({ offsetX, offsetY }) => {
-    console.log('debugger: ', offsetX * rateX, offsetY * rateY)
-    console.log([...ctx.getImageData(offsetX * rateX, offsetY * rateY, 1, 1).data])
-  })
+  // canvas.addEventListener('mousemove', ({ offsetX, offsetY }) => {
+  //   console.log('hook: ', `(${offsetX}, ${offsetY})`, `rgba(${[...ctx.getImageData(offsetX, offsetY, 1, 1).data].toString()})`)
+  // })
 }
 
-function drawColorPickerSlider(id, width, h) {
-  const height = 1530 // 6 * 0xff
-  const rate = 1530 / h // 8.5
-  const canvas = document.getElementById(id)
+function drawColorPickerSlider() {
+  // 画布样式宽度 12, 高度 180, 画布实际宽度 13, 高度 1531
+  const width = 12
+  const height = 180
+  const fullHeight = 1530 // 6 * 0xff
+  const rate = 8.5 // rate = fullHeight / height = 8.5
+  const canvas = document.getElementById(slider)
   const ctx = canvas.getContext('2d')
 
-  canvas.width = width + 1 // 这里和下面的 fillRect 中的 101, 如果没有 1, getImageData(100, 0, 1, 1) 会获取到 [0,0,0,0]
-  canvas.height = height + 1 // 这里如果不加 1, getImageData(0, 1530, 1, 1) 会获取到 [0,0,0,0]
+  canvas.width = width + 1
+  canvas.height = fullHeight + 1
   canvas.style.width = width + 'px'
-  canvas.style.height = height / rate + 'px'
+  canvas.style.height = height + 'px'
 
-  for (let a = 0, i = 1, j = 1, rgb = [255, 0, 0]; a <= 6 * 0xff; a++) {
+  for (let h = 0, i = 1, j = 1, rgb = [255, 0, 0]; h <= fullHeight; h++) {
     ctx.fillStyle = `rgb(${rgb[0]}, ${rgb[1]}, ${rgb[2]})`
-    ctx.fillRect(0, a, width + 1, 1)
+    ctx.fillRect(0, h, width + 1, 1)
 
+    // 算法: 实现 F00 FF0 0F0 0FF 00F F0F F00 规律
     rgb[i] += j
     if (rgb[i] === 255 || rgb[i] === 0) {
       i = i - 1 < 0 ? 2 : i - 1
@@ -89,9 +95,8 @@ function drawColorPickerSlider(id, width, h) {
     }
   }
 
-  // canvas.addEventListener('click', ({ offsetX, offsetY }) => {
-  //   console.log('debugger: ', offsetX, offsetY * rate)
-  //   console.log([...ctx.getImageData(offsetX, offsetY * rate, 1, 1).data])
+  // canvas.addEventListener('mousemove', ({ offsetX, offsetY }) => {
+  //   console.log('hook: ', `(${offsetX}, ${offsetY})`, `rgba(${[...ctx.getImageData(offsetX, offsetY * rate, 1, 1).data].toString()})`)
   // })
 }
 
@@ -100,9 +105,17 @@ export default {
   emits: ['update:modelValue'],
   data() {
     return {
+      board,
+      slider,
+      cursor,
+      bar,
+
       show: false,
-      colorHex: this.modelValue,
+      isCursorMouseDown: false,
+      isBarMouseDown: false,
       autoSubmit: true,
+      colorHex: this.modelValue, // 这个颜色属性仅仅作用在该组件内。关闭自动提交时它和 this.modelValue 不相等
+      inputColor: this.modelValue.substring(1), // 只允许修改数字, # 符号必须存在
     }
   },
   computed: {
@@ -118,78 +131,90 @@ export default {
     },
   },
   methods: {
+    checkInput() {
+      if (!/^[0-9a-fA-F]{3}$/.test(this.inputColor) && !/^[0-9a-fA-F]{6}$/.test(this.inputColor)) {
+        this.updateColorHex()
+      }
+    },
     submit() {
       this.$emit('update:modelValue', this.colorHex)
     },
-    update() {
-      const canvas = this.$refs.board
-      const cursor = this.$refs.cursor
-      const y = Number.parseFloat(cursor.style.top)
-      const x = Number.parseFloat(cursor.style.left)
+    updateColorHex(top, left) {
+      const canvas = this.$refs[board]
+      const y = top || Number.parseFloat(this.$refs[cursor].style.top)
+      const x = left || Number.parseFloat(this.$refs[cursor].style.left)
       const rgba = [...canvas.getContext('2d').getImageData(x, y, 1, 1).data]
       this.colorHex = rgb2Hex(rgba)
+      this.inputColor = this.colorHex.substring(1)
+    },
+    updateCursorPosition(clientX, clientY) {
+      const canvasStyle = this.$refs[board].getBoundingClientRect()
+      const canvasTop = canvasStyle.top
+      const canvasLeft = canvasStyle.left
+      const canvasHeight = canvasStyle.height
+      const canvasWidth = canvasStyle.width
+      const cursorElement = this.$refs[cursor]
+      let top = clientY - canvasTop
+      let left = clientX - canvasLeft
+      if (top <= 0) top = 0
+      if (top >= canvasHeight) top = canvasHeight
+      if (left <= 0) left = 0
+      if (left >= canvasWidth) left = canvasWidth
+
+      cursorElement.style.top = top + 'px'
+      cursorElement.style.left = left + 'px'
+      this.updateColorHex(top, left)
+    },
+    updateBarPosition(clientY) {
+      const canvas = this.$refs[slider]
+      const canvasStyle = canvas.getBoundingClientRect()
+      const canvasTop = canvasStyle.top
+      const canvasHeight = canvasStyle.height
+      const barElement = this.$refs[bar]
+      let top = clientY - canvasTop
+      if (top <= 0) top = 0
+      if (top >= canvasHeight) top = canvasHeight
+
+      barElement.style.top = top + 'px'
+      drawColorPickerBoard([...canvas.getContext('2d').getImageData(1, top * 8.5, 1, 1).data])
+      this.updateColorHex()
+    },
+    barDown() {
+      this.isBarMouseDown = true
+    },
+    cursorDown(e) {
+      this.updateCursorPosition(e.clientX, e.clientY)
+      this.isCursorMouseDown = true
+    },
+  },
+  watch: {
+    inputColor() {
+      this.colorHex = '#' + this.inputColor
       if (this.autoSubmit) this.submit()
-    },
-    barDown(e1) {
-      const canvas = this.$refs.slider
-      const target = e1.currentTarget
-      const pStyle = target.parentElement.getBoundingClientRect()
-      const pTop = pStyle.top
-      const pHeight = pStyle.height
-      document.onmousemove = e2 => {
-        let t = e2.clientY - pTop
-        if (t <= 0) t = 0
-        if (t >= pHeight) t = pHeight
-        target.style.top = t + 'px'
-        // NOTE: 效率特别特别差！！！
-        // TODO: 待修复
-        drawColorPickerBoard('color-picker-board', [...canvas.getContext('2d').getImageData(1, t * 8.5, 1, 1).data], 280, 180)
-        this.update()
-
-        document.onmouseup = () => {
-          document.onmousemove = null
-        }
-      }
-    },
-    cursorDown(e1) {
-      const cursor = this.$refs.cursor
-      const target = e1.target
-      const pStyle = target.getBoundingClientRect()
-      const pTop = pStyle.top
-      const pLeft = pStyle.left
-      const pHeight = pStyle.height
-      const pWidth = pStyle.width
-      let t = e1.clientY - pTop
-      let l = e1.clientX - pLeft
-      if (t <= 0) t = 0
-      if (l <= 0) l = 0
-      if (t >= pHeight) t = pHeight
-      if (l >= pWidth) l = pWidth
-      cursor.style.top = t + 'px'
-      cursor.style.left = l + 'px'
-      this.update(l, t)
-
-      document.onmousemove = e2 => {
-        let t = e2.clientY - pTop
-        let l = e2.clientX - pLeft
-        if (t <= 0) t = 0
-        if (l <= 0) l = 0
-        if (t >= pHeight) t = pHeight
-        if (l >= pWidth) l = pWidth
-        cursor.style.top = t + 'px'
-        cursor.style.left = l + 'px'
-        this.update(l, t)
-      }
     },
   },
   mounted() {
-    drawColorPickerBoard('color-picker-board', [255, 0, 0], 280, 180)
-    drawColorPickerSlider('color-picker-slider', 12, 180)
-    document.addEventListener('mouseup', () => {
-      document.onmousemove = null
+    drawColorPickerBoard([255, 0, 0])
+    drawColorPickerSlider()
+
+    this.$refs[cursor].style.top = '100px'
+    this.$refs[cursor].style.left = '100px'
+    this.$refs[bar].style.top = '0'
+
+    document.addEventListener('mousemove', ({ clientX, clientY }) => {
+      if (this.isCursorMouseDown) this.updateCursorPosition(clientX, clientY)
+      if (this.isBarMouseDown) this.updateBarPosition(clientY)
     })
-    document.addEventListener('click', () => {
-      this.show = false
+    document.addEventListener('mouseup', e => {
+      if (isAinB(e.target, this.$refs.btnBox)) {
+        this.show = !this.show
+      } else if (isAinB(e.target, this.$refs.panel)) {
+        this.show = true
+      } else if (!this.isCursorMouseDown && !this.isBarMouseDown) {
+        this.show = false
+      }
+      this.isCursorMouseDown = false
+      this.isBarMouseDown = false
     })
   },
 }
@@ -242,6 +267,9 @@ export default {
         height: 100%;
       }
     }
+    &:hover .btn svg {
+      fill: skyblue;
+    }
   }
 
   .panel {
@@ -287,12 +315,14 @@ export default {
       right: 10px;
       .slider__bar {
         position: absolute;
-        top: 10px;
-        left: -3px;
+        top: 0px;
+        left: -2px;
 
         display: block;
         width: 16px;
         height: 4px;
+        margin-top: -3px;
+        border: 1px solid #aaa;
         background-color: #fff;
         box-shadow: 0 0 4px #999;
 
@@ -313,13 +343,24 @@ export default {
 
         width: 90px;
         height: 30px;
-        line-height: 30px;
-        font-size: inherit;
-        text-align: center;
 
-        background-color: #fff;
+        display: flex;
+        justify-content: center;
+        align-items: center;
         border: 1px solid #d1d1d1;
-        outline: none;
+        background-color: #fff;
+
+        input {
+          max-width: 60px;
+          font-size: inherit;
+          text-align: left;
+          padding-left: 2px;
+          box-sizing: border-box;
+          outline: none;
+        }
+        &::before {
+          content: '#';
+        }
       }
       .autoSubmit {
         position: absolute;

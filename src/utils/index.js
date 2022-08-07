@@ -18,3 +18,14 @@ function numTo16(num) {
 export function rgb2Hex(rgb) {
   return '#' + numTo16(rgb[0]) + numTo16(rgb[1]) + numTo16(rgb[2])
 }
+
+export function isAinB(A, B) {
+  // parentElement 是有 “尽头” 的, 所以直接判断 A
+  while (!!A) {
+    if (A == B) {
+      return true
+    }
+    A = A.parentElement
+  }
+  return false
+}

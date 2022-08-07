@@ -67,9 +67,13 @@ export default defineStore('configOptionsTemp', {
       this.show = false
       this.id = -1
     },
-    modify(property, value) {
-      // 单位包含在 value 中了
-      this.style[property] = value
-    },
+    // modify(property, value) {
+    // 一般来说，不要直接修改 state 比较好，将修改的方式的放在 actions 中比较好
+    // 这样后续需要校验什么的比较方便
+    // 但是在这里，条件限制已经交给了 styleLimit
+    // 而且某些操作上，直接修改 state 更方便
+    // 所以对于 configOptionsTemp 的数据修改，直接通过 state 修改
+    // this.style[property] = value
+    // },
   },
 })
