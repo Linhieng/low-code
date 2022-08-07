@@ -4,6 +4,8 @@ import { useDrawData } from '@/stores/index'
 // TODO: 对相关值进行限制，这里先简单处理一下。
 // limitFunction 对象的属性均为函数，并且该函数名与样式属性名对应，返回值也不是乱写的，他们和 @/components/work-place/Right/StyleConfig.vue 中的限制一一对应
 const limitFunction = {
+  // 数值的限制
+
   width() {
     return { min: 100, max: 1000 }
   },
@@ -25,15 +27,22 @@ const limitFunction = {
   fontSize() {
     return { min: 12, max: 40 }
   },
+  lineHeight() {
+    return { min: 20, max: 100 }
+  },
+
+  // 选项的限制
+
   textAlign() {
     return {
       enumOptions: ['left', 'center', 'right'],
     }
   },
-  color() {
-    // 颜色倒是没什么需要限制的, 但是该属性还是得存在
-    return {}
-  },
+
+  // 颜色没什么需要限制的, 因为使用取色板, 但是该属性还是得存在
+
+  color() {},
+  backgroundColor() {},
 }
 
 // 存储当前正在修改配置的可配置项
@@ -62,6 +71,11 @@ export default defineStore('configOptionsTemp', {
     save() {
       const drawData = useDrawData()
       drawData.update(this.id, this.style, this.config)
+    },
+    reset() {
+      const drawData = useDrawData()
+      this.config = JSON.parse(JSON.stringify(drawData.elementConfig[this.id].config))
+      this.style = JSON.parse(JSON.stringify(drawData.elementConfig[this.id].style))
     },
     close() {
       this.show = false

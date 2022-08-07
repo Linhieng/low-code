@@ -1,6 +1,6 @@
 <template>
   <div class="color-picker">
-    <div ref="btnBox" class="btn-box">
+    <div :ref="btnBox" class="btn-box">
       <div class="btn">
         <svg v-show="show" t="1659799815661" class="show icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="2564" width="200" height="200"><path d="M512 224c184.736 0 340 122.368 384 288-44 165.632-199.264 288-384 288S172 677.632 128 512c44-165.632 199.264-288 384-288z m0 64c-147.008 0-274.464 92.544-317.28 224 42.816 131.456 170.24 224 317.28 224 147.008 0 274.464-92.544 317.28-224-42.816-131.456-170.24-224-317.28-224z m0 64a160 160 0 1 1 0 320 160 160 0 0 1 0-320z m0 64a96 96 0 1 0 0 192 96 96 0 0 0 0-192z" p-id="2565"></path></svg>
         <svg v-show="!show" t="1659799797479" class="hidden icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="2410" width="200" height="200"><path d="M512 224c86.784 0 167.072 27.008 232.384 72.832l80.576-60.736 38.528 51.104-68.608 51.712A380.576 380.576 0 0 1 896 512c-44 165.632-199.264 288-384 288-86.784 0-167.072-27.008-232.384-72.832L199.04 787.904l-38.528-51.104 68.608-51.712A380.576 380.576 0 0 1 128 512c44-165.632 199.264-288 384-288z m144.512 219.2a160 160 0 0 1-250.432 188.704l-72.128 54.368A341.12 341.12 0 0 0 512 736c147.008 0 274.464-92.544 317.28-224-15.68-48.128-45.472-93.536-86.144-134.08l-86.624 65.28zM512 288c-147.008 0-274.464 92.544-317.28 224a317.504 317.504 0 0 0 86.144 134.08l86.624-65.28a160 160 0 0 1 250.432-188.704l72.128-54.368A341.12 341.12 0 0 0 512 288z m-53.024 304.032A96 96 0 0 0 608 512c0-7.552-2.016-20.672-4.448-28.928L458.976 592zM512 416a96 96 0 0 0-91.552 124.928l144.576-108.96A95.552 95.552 0 0 0 512 416z" p-id="2411"></path></svg>
@@ -8,7 +8,7 @@
       <p>{{ modelValue }}</p>
       <span class="color-preview" :style="bgColor"></span>
     </div>
-    <div ref="panel" v-show="show" class="panel">
+    <div :ref="panel" v-show="show" class="panel">
       <div class="board" @mousedown="cursorDown">
         <canvas :ref="board" :id="board"></canvas>
         <span :ref="cursor" class="board__cursor"></span>
@@ -36,15 +36,12 @@
 import { isAinB, rgb2Hex } from '@/utils/index'
 
 // NOTE: canvas 面板的 id、宽高是写死的, 因为基本不会改变. 为了方便修改 canvas 的 id, 所以 id 直接在这外面定义了, 这个不仅仅可作为 ID, 还会作为 ref
-const board = 'canvas-id-board'
-const slider = 'canvas-id-slider'
-const cursor = 'canvas-board-cursor'
-const bar = 'canvas-slider-bar'
+let nums = 0
 
-function drawColorPickerBoard(rgb) {
+function drawColorPickerBoard(id, rgb) {
   const width = 280
   const height = 180
-  const canvas = document.getElementById(board)
+  const canvas = document.getElementById(id)
   const ctx = canvas.getContext('2d')
 
   canvas.width = width + 1
@@ -63,19 +60,15 @@ function drawColorPickerBoard(rgb) {
     ctx.fillStyle = gradient
     ctx.fillRect(width - x, 0, 1, height)
   }
-
-  // canvas.addEventListener('mousemove', ({ offsetX, offsetY }) => {
-  //   console.log('hook: ', `(${offsetX}, ${offsetY})`, `rgba(${[...ctx.getImageData(offsetX, offsetY, 1, 1).data].toString()})`)
-  // })
 }
 
-function drawColorPickerSlider() {
+function drawColorPickerSlider(id) {
   // 画布样式宽度 12, 高度 180, 画布实际宽度 13, 高度 1531
   const width = 12
   const height = 180
   const fullHeight = 1530 // 6 * 0xff
   const rate = 8.5 // rate = fullHeight / height = 8.5
-  const canvas = document.getElementById(slider)
+  const canvas = document.getElementById(id)
   const ctx = canvas.getContext('2d')
 
   canvas.width = width + 1
@@ -94,10 +87,6 @@ function drawColorPickerSlider() {
       j *= -1
     }
   }
-
-  // canvas.addEventListener('mousemove', ({ offsetX, offsetY }) => {
-  //   console.log('hook: ', `(${offsetX}, ${offsetY})`, `rgba(${[...ctx.getImageData(offsetX, offsetY * rate, 1, 1).data].toString()})`)
-  // })
 }
 
 export default {
@@ -105,10 +94,12 @@ export default {
   emits: ['update:modelValue'],
   data() {
     return {
-      board,
-      slider,
-      cursor,
-      bar,
+      board: 'canvas-id-board' + nums,
+      slider: 'canvas-id-slider' + nums,
+      cursor: 'canvas-board-cursor' + nums,
+      bar: 'canvas-slider-bar' + nums,
+      btnBox: 'color-picker-btnBox' + nums,
+      panel: 'color-picker-panel' + nums,
 
       show: false,
       isCursorMouseDown: false,
@@ -140,20 +131,20 @@ export default {
       this.$emit('update:modelValue', this.colorHex)
     },
     updateColorHex(top, left) {
-      const canvas = this.$refs[board]
-      const y = top || Number.parseFloat(this.$refs[cursor].style.top)
-      const x = left || Number.parseFloat(this.$refs[cursor].style.left)
+      const canvas = this.$refs[this.board]
+      const y = top || Number.parseFloat(this.$refs[this.cursor].style.top)
+      const x = left || Number.parseFloat(this.$refs[this.cursor].style.left)
       const rgba = [...canvas.getContext('2d').getImageData(x, y, 1, 1).data]
       this.colorHex = rgb2Hex(rgba)
       this.inputColor = this.colorHex.substring(1)
     },
     updateCursorPosition(clientX, clientY) {
-      const canvasStyle = this.$refs[board].getBoundingClientRect()
+      const canvasStyle = this.$refs[this.board].getBoundingClientRect()
       const canvasTop = canvasStyle.top
       const canvasLeft = canvasStyle.left
       const canvasHeight = canvasStyle.height
       const canvasWidth = canvasStyle.width
-      const cursorElement = this.$refs[cursor]
+      const cursorElement = this.$refs[this.cursor]
       let top = clientY - canvasTop
       let left = clientX - canvasLeft
       if (top <= 0) top = 0
@@ -166,17 +157,17 @@ export default {
       this.updateColorHex(top, left)
     },
     updateBarPosition(clientY) {
-      const canvas = this.$refs[slider]
+      const canvas = this.$refs[this.slider]
       const canvasStyle = canvas.getBoundingClientRect()
       const canvasTop = canvasStyle.top
       const canvasHeight = canvasStyle.height
-      const barElement = this.$refs[bar]
+      const barElement = this.$refs[this.bar]
       let top = clientY - canvasTop
       if (top <= 0) top = 0
       if (top >= canvasHeight) top = canvasHeight
 
       barElement.style.top = top + 'px'
-      drawColorPickerBoard([...canvas.getContext('2d').getImageData(1, top * 8.5, 1, 1).data])
+      drawColorPickerBoard(this.board, [...canvas.getContext('2d').getImageData(1, top * 8.5, 1, 1).data])
       this.updateColorHex()
     },
     barDown() {
@@ -193,22 +184,25 @@ export default {
       if (this.autoSubmit) this.submit()
     },
   },
+  beforeCreate() {
+    nums++
+  },
   mounted() {
-    drawColorPickerBoard([255, 0, 0])
-    drawColorPickerSlider()
+    drawColorPickerBoard(this.board, [255, 0, 0])
+    drawColorPickerSlider(this.slider)
 
-    this.$refs[cursor].style.top = '100px'
-    this.$refs[cursor].style.left = '100px'
-    this.$refs[bar].style.top = '0'
+    this.$refs[this.cursor].style.top = '100px'
+    this.$refs[this.cursor].style.left = '100px'
+    this.$refs[this.bar].style.top = '0'
 
     document.addEventListener('mousemove', ({ clientX, clientY }) => {
       if (this.isCursorMouseDown) this.updateCursorPosition(clientX, clientY)
       if (this.isBarMouseDown) this.updateBarPosition(clientY)
     })
     document.addEventListener('mouseup', e => {
-      if (isAinB(e.target, this.$refs.btnBox)) {
+      if (isAinB(e.target, this.$refs[this.btnBox])) {
         this.show = !this.show
-      } else if (isAinB(e.target, this.$refs.panel)) {
+      } else if (isAinB(e.target, this.$refs[this.panel])) {
         this.show = true
       } else if (!this.isCursorMouseDown && !this.isBarMouseDown) {
         this.show = false

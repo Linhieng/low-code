@@ -81,8 +81,8 @@ export const ELEMENT_STYLE = {
     fontSize: '16px',
     textAlign: 'center',
     color: '#666',
-    // backgroundColor: '#FFF',
-    // lineHeight: '40px',
+    lineHeight: '40px',
+    backgroundColor: '#FFF',
   },
   [ELEMENT_IMAGE]: {
     ...ELEMENT_STYLE_TOGETHER,

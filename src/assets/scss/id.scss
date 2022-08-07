@@ -2,7 +2,7 @@
 
 $top-height: 100px;
 $left-width: 300px;
-$draw-width: 1200px;
+$draw-width: 1100px;
 
 #top {
   position: fixed;
@@ -111,7 +111,7 @@ $draw-width: 1200px;
   left    : calc(($left-width + $draw-width));
 
   width     : calc(100% - $left-width - $draw-width);
-  min-width : 300px;
+  min-width : 360px;
   height    : calc(100vh - $top-height);
   padding   : 0 20px;
   margin-top: $top-height;

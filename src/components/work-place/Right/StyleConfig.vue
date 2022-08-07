@@ -1,5 +1,7 @@
 <template>
   <div class="modify-style">
+    <!-- rand -->
+
     <div v-if="styleList.width" class="modify-item">
       <p class="property">width: {{ styleList.width }}</p>
       <input @input="modify('width', $event.currentTarget.value + 'px')" class="value" type="range" :value="Number.parseFloat(styleList.width)" :min="styleLimit.width.min" :max="styleLimit.width.max" />
@@ -25,6 +27,13 @@
       <input @input="modify('fontSize', $event.currentTarget.value + 'px')" class="value" type="range" :value="Number.parseFloat(styleList.fontSize)" :min="styleLimit.fontSize.min" :max="styleLimit.fontSize.max" />
     </div>
 
+    <div v-if="styleList.lineHeight" class="modify-item">
+      <p class="property">line-height: {{ styleList.lineHeight }}</p>
+      <input @input="modify('lineHeight', $event.currentTarget.value + 'px')" class="value" type="range" :value="Number.parseFloat(styleList.lineHeight)" :min="styleLimit.lineHeight.min" :max="styleLimit.lineHeight.max" />
+    </div>
+
+    <!-- 选项 -->
+
     <div v-if="styleList.textAlign" class="modify-item">
       <p class="property">text-align: {{ styleList.textAlign }}</p>
       <ul class="ul-value">
@@ -32,10 +41,18 @@
       </ul>
     </div>
 
+    <!-- 颜色 -->
+
     <div v-if="styleList.color" class="modify-item">
       <p class="property">color: {{ styleList.color }}</p>
       <div class="value">
         <ColorPicker v-model="styleList.color" />
+      </div>
+    </div>
+    <div v-if="styleList.backgroundColor" class="modify-item">
+      <p class="property">background-color: {{ styleList.backgroundColor }}</p>
+      <div class="value">
+        <ColorPicker v-model="styleList.backgroundColor" />
       </div>
     </div>
   </div>
@@ -83,6 +100,8 @@ export default {
   }
   .value {
     width: 100%;
+    display: flex;
+    justify-content: center;
   }
   .ul-value {
     width: 100%;

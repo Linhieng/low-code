@@ -10,12 +10,14 @@
       <button @click="modifyType = STYLE_TYPE" :class="modifyType == STYLE_TYPE ? 'btn-active' : ''" class="modify_style">编辑样式</button>
       <button @click="modifyType = CONTENT_TYPE" :class="modifyType == CONTENT_TYPE ? 'btn-active' : ''" class="modify_options">编辑内容</button>
     </div>
+
     <div class="tabs-content">
       <StyleConfig v-show="modifyType === STYLE_TYPE" />
       <ContentConfig v-show="modifyType === CONTENT_TYPE" />
     </div>
     <div class="btn-save">
-      <button @click="save" title="保存">保存并修改</button>
+      <button class="save" @click="save" title="保存并修改">保存并修改</button>
+      <button class="reset" @click="reset" title="全部重置">全部重置</button>
     </div>
   </div>
 </template>
@@ -54,6 +56,9 @@ export default {
       this.configOptions.save()
       this.$msg('已保存', 'success')
     },
+    reset() {
+      this.configOptions.reset()
+    },
   },
   mounted() {
     this.workPlaceRefs.addRight(this.$refs.right)
@@ -68,6 +73,7 @@ export default {
 }
 
 #right h2 {
+  height: 86px;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -116,12 +122,54 @@ export default {
   }
 }
 
+#right .tabs-content {
+  $padding-left: 4px;
+  height: calc(100% - 230px);
+  padding-right: $padding-left;
+  margin-top: 20px;
+  overflow-y: auto;
+
+  &::-webkit-scrollbar {
+    width: $padding-left;
+    height: $padding-left;
+  }
+  &::-webkit-scrollbar-thumb {
+    background-color: transparent;
+    box-shadow: inset 0 0 $padding-left $padding-left skyblue;
+  }
+}
+
 #right .btn-save {
-  margin-top: 100px;
+  margin-top: 20px;
   button {
     width: 100px;
     height: 36px;
+    margin: 0 10px;
     cursor: pointer;
+    outline: none;
+  }
+  .save {
+    box-sizing: border-box;
+    background-color: skyblue;
+    color: #fff;
+    &:hover {
+      filter: brightness(1.04);
+    }
+    &:active {
+      filter: brightness(0.96);
+    }
+  }
+  .reset {
+    border: 1px solid #d1d11d;
+    border-radius: 4px;
+    background-color: #fff;
+    color: #000;
+    &:hover {
+      filter: brightness(1.04);
+    }
+    &:active {
+      filter: brightness(0.96);
+    }
   }
 }
 </style>
