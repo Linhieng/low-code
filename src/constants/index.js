@@ -96,17 +96,17 @@ export const ELEMENT_STYLE = {
 }
 export const ELEMENT_CONFIG = {
   [ELEMENT_TEXT]: {
-    textValue: '',
+    innerText: '',
   },
   [ELEMENT_BUTTON]: {
-    textValue: '',
+    innerText: '按钮',
   },
   [ELEMENT_IMAGE]: {
     alt: '',
     url: '',
   },
   [ELEMENT_LINK]: {
-    textValue: '',
+    innerText: '',
     url: '',
   },
   [ELEMENT_VIDEO]: {
