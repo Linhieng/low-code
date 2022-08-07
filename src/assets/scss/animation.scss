@@ -1,0 +1,34 @@
+// 从右侧出现
+@mixin show-right {
+  animation-name: show-right;
+  animation-duration: .3s;
+}
+@mixin hidden-right {
+  animation-name: hidden-right;
+  animation-duration: .3s;
+  animation-fill-mode: forwards;
+}
+
+@keyframes show-right {
+  0% {
+    transform: translateX(300%);
+  }
+  80% {
+    transform: translateX(-10%);
+  }
+  100% {
+    transform: translateX(0%);
+  }
+}
+
+@keyframes hidden-right {
+  0% {
+    transform: translateX(0%);
+  }
+  30% {
+    transform: translateX(-20%);
+  }
+  100% {
+    transform: translateX(300%);
+  }
+}

@@ -1,23 +1,17 @@
 <template>
-  <p>这个数是非响应式的：{{num}}</p>
-  <p>这样才是响应式的{{totalNum.num}}</p>
-  <p>这样才是响应式的{{totalNum.actionTimes}}</p>
-  <button @click="totalNum.increment">+1</button>
-  <button @click="totalNum.decrement">-1</button>
-  <router-link to="/test-upload">前往测试切片上传</router-link>
+  <Top />
+  <Left />
+  <Draw />
+  <Right />
 </template>
 
 <script>
-import { useTotalNumStore } from '@/stores/index'
+import Left from '@/components/work-place/Left.vue'
+import Draw from '@/components/work-place/Draw.vue'
+import Right from '@/components/work-place/Right.vue'
+import Top from '@/components/work-place/Top.vue'
 
 export default {
-  data() {
-    const totalNum = useTotalNumStore()
-    // 注意, 不推荐这样直接修改: totalNum.num++
-    return {
-      totalNum,
-      num: totalNum.num
-    }
-  }
+  components: { Left, Draw, Right, Top },
 }
 </script>
