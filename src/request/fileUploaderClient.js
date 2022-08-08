@@ -13,8 +13,9 @@ import { SERVER_HOST } from '@/constants/index'
  * @param options (可选) 可配置切片大小和重试次数
  * @returns
  */
-export default function (file, { sumSliceSumCallback, sliceProgressCallback, initCallback, partCallback, finishCallback }, options) {
-  if (!file instanceof File) return 'file 不是 File'
+export default async function (file, { controlUploadCallback, sumSliceSumCallback, sliceProgressCallback, initCallback, partCallback, finishCallback }, options) {
+  if (!file instanceof File) throw new Error('file 参数不是 File')
+  if (typeof finishCallback !== 'function') throw new Error('未提供 controlUploadCallback ')
 
   typeof sumSliceSumCallback === 'function' || (sumSliceSumCallback = () => {})
   typeof sliceProgressCallback === 'function' || (sliceProgressCallback = () => {})
@@ -25,9 +26,13 @@ export default function (file, { sumSliceSumCallback, sliceProgressCallback, ini
   const chunkSize = options?.chunkSize || 2 * 1024 * 1024 // 2MB
   const retryTimes = options?.retryTimes || 2
 
-  let uploadId
+  const controlUpload = () =>
+    new Promise((res, rej) => {
+      controlUploadCallback(res, rej)
+    })
 
-  return new FileUploaderClient({
+  let uploadId
+  const fileUploaderClient = new FileUploaderClient({
     chunkSize,
     requestOptions: {
       retryTimes,
@@ -38,6 +43,8 @@ export default function (file, { sumSliceSumCallback, sliceProgressCallback, ini
         sliceProgressCallback(currentChunks)
       },
       initFilePartUploadFunc: async () => {
+        await controlUpload()
+
         const fileName = file.name
         const { data } = await axios.post(`${SERVER_HOST}api/initUpload`, { name: fileName })
         uploadId = data.uploadId
@@ -64,5 +71,7 @@ export default function (file, { sumSliceSumCallback, sliceProgressCallback, ini
         finishCallback(`${SERVER_HOST}${data.path}`)
       },
     },
-  }).uploadFile(file)
+  })
+
+  return fileUploaderClient.uploadFile(file)
 }

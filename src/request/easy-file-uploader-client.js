@@ -99,12 +99,25 @@ export class FileUploaderClient {
     const { md5, chunkList } = await this.getChunkListAndFileMd5(file, requestOptions.sumSliceSumFunc, requestOptions.sliceProgressFunc)
     const retryList = []
 
-    await requestOptions.initFilePartUploadFunc()
+    // 当连续 10 个上传都失败时, 就没必要继续了
+    const maxContinueErr = 10
+    let continueErr = 0
+
+    try {
+      console.log('hook: 切片完成,随时可以上传')
+      await requestOptions.initFilePartUploadFunc()
+    } catch (error) {
+      // 初始化失败时就直接退出吧. (取消上传这会在这里被捕获)
+      throw error
+    }
 
     for (let index = 0; index < chunkList.length; index++) {
       try {
         await requestOptions.uploadPartFileFunc(chunkList[index], index)
+        continueErr = 0
       } catch (e) {
+        continueErr++
+        if (continueErr >= maxContinueErr) throw e
         console.warn(`${index} part upload failed`)
         retryList.push(index)
       }
@@ -118,7 +131,10 @@ export class FileUploaderClient {
           try {
             await requestOptions.uploadPartFileFunc(chunkList[blobIndex], blobIndex)
             retryList.splice(a, 1)
+            continueErr = 0
           } catch (e) {
+            continueErr++
+            if (continueErr >= maxContinueErr) throw e
             console.warn(`${blobIndex} part retry upload failed, times: ${retry}`)
           }
         }

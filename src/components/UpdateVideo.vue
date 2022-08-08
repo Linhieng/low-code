@@ -14,11 +14,10 @@
       <div class="config">
         <button class="btn-submit" @click="submit">点击上传</button>
         <div class="status">
-          <p class="status-value" :style="{ color: submitProgress >= 100 ? 'skyblue' : '' }">{{ submitProgress >= 100 ? '已上传' : '未上传' }}</p>
+          <p class="status-value" :style="{ color: submitProgress >= 100 ? 'skyblue' : '' }">{{ statusInfo }}</p>
           <div class="progress">
             <span class="thumb" :style="{ width: submitProgress + 'px', filter: `brightness(${1 + submitProgress * 0.002})` }"></span>
           </div>
-          <!-- <progress max="100" :value="submitProgress"></progress> -->
         </div>
       </div>
     </div>
@@ -37,9 +36,38 @@ export default {
       previewSrc: '',
       show: false,
       submitProgress: 0,
+      parseProgress: 0,
+      chunks: -1,
     }
   },
+  computed: {
+    statusInfo() {
+      if (parseProgress === 0) return '未上传'
+      if (parseProgress < 100) return '解析中'
+      if (parseProgress === 100) return '上传中'
+      if (submitProgress === 100) return '已上传'
+    },
+  },
   methods: {
+    uploadVideo() {
+      uploadFile(files[0], {
+        sumSliceSumCallback: chunks => {
+          this.chunks = chunks
+        },
+        sliceProgressCallback: currentChunk => {
+          console.log('debugger: ', currentChunk)
+        },
+        initCallback: id => {
+          console.log('uploadId', id)
+        },
+        partCallback: index => {
+          console.log(`第 ${index} 个切片上传完成`)
+        },
+        finishCallback: url => {
+          this.url = url
+        },
+      })
+    },
     change() {
       this.previewSrc = window.URL.createObjectURL(this.$refs.input.files[0])
     },
@@ -48,6 +76,8 @@ export default {
         console.log('debugger: ', '正在上传...')
         return
       }
+
+      uploadVideo()
       // TODO:
       // try {
       //   uploadFile(this.$refs.input.files[0])
