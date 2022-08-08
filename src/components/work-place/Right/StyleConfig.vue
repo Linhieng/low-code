@@ -4,7 +4,7 @@
 
     <div v-if="styleList.width" class="modify-item">
       <p class="property">width: {{ styleList.width }}</p>
-      <input @input="modify('width', $event.currentTarget.value + 'px')" class="value" type="range" :value="Number.parseFloat(styleList.width)" :min="styleLimit.width.min" :max="styleLimit.width.max" />
+      <input @input="modify('width', $event.currentTarget.value + 'px')" class="value" type="range" :value="Number.parseFloat(styleList.width)" :min="styleLimit.width.min" :max="styleLimit.width.max"/>
     </div>
 
     <div v-if="styleList.height" class="modify-item">
@@ -78,6 +78,20 @@ export default {
     styleLimit() {
       return this.configOption.styleLimit
     },
+    fontSizeMax(){
+      return this.configOption.styleLimit.fontSize.max
+    }
+  },
+  watch:{
+    styleList:{
+      handler(n,o){
+        this.styleLimit.lineHeight.max = Number.parseFloat(n.fontSize) + 2 * (Number.parseFloat(n.height) - Number.parseFloat(n.fontSize))
+         const fontPadding = (Number.parseFloat(n.lineHeight) - Number.parseFloat(n.fontSize)) / 2
+        const bottomDistance = Number.parseFloat(n.height) - fontPadding - Number.parseFloat(n.fontSize)
+        this.styleLimit.fontSize.max= fontPadding > bottomDistance ? (bottomDistance * 2 + Number.parseFloat(n.fontSize)) : (fontPadding * 2 + Number.parseFloat(n.fontSize)) 
+      },
+      deep:true
+    }
   },
   methods: {
     modify(property, value) {
