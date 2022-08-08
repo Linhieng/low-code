@@ -27,6 +27,8 @@
 
 <script>
 import { isAinB } from '@/utils'
+import uploadFile from '@/request/fileUploaderClient'
+
 export default {
   emits: ['update:modelValue'],
   props: ['modelValue'],
@@ -47,8 +49,13 @@ export default {
         return
       }
       // TODO:
+      // try {
+      //   uploadFile(this.$refs.input.files[0])
+      // } catch (error) {
+      //   console.error(error.message)
+      // }
 
-      this.$emit('update:modelValue', this.previewSrc)
+      // this.$emit('update:modelValue', this.previewSrc)
     },
   },
   watch: {

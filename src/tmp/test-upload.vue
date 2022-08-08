@@ -4,15 +4,15 @@
     <h3>选择文件后点击“上传文件”按钮即可</h3>
     <div className="App">
       <input type="file" name="file" ref="fileInput" />
-      <input type="button" value="上传文件" @click="upload" />
+      <button @click="upload" class="btn-submit" title="上传文件">上传文件</button>
     </div>
     <h3>已上传的文件地址: {{ url }}</h3>
-    <br>
-    <hr>
-    <br>
+    <br />
+    <hr />
+    <br />
     <div className="App">
       <input type="file" name="file" ref="fileInput2" />
-      <input type="button" value="上传文件" @click="upload2" />
+      <button @click="upload2" class="btn-submit" title="上传文件">上传文件</button>
     </div>
     <h3>已上传的文件地址: {{ url2 }}</h3>
   </div>
@@ -25,7 +25,7 @@ export default {
   data() {
     return {
       url: '',
-      url2: ''
+      url2: '',
     }
   },
 
@@ -33,18 +33,23 @@ export default {
     upload() {
       const files = this.$refs.fileInput.files
       if (files.length > 0) {
-        uploadFile(
-          files[0],
-          id => {
+        uploadFile(files[0], {
+          sumSliceSumCallback: chunks => {
+            console.log('debugger: ', chunks)
+          },
+          sliceProgressCallback: currentChunk => {
+            console.log('debugger: ', currentChunk)
+          },
+          initCallback: id => {
             console.log('uploadId', id)
           },
-          index => {
+          partCallback: index => {
             console.log(`第 ${index} 个切片上传完成`)
           },
-          url => {
+          finishCallback: url => {
             this.url = url
           },
-        )
+        })
       }
     },
     upload2() {
@@ -67,5 +72,3 @@ export default {
   },
 }
 </script>
-
-<style></style>
