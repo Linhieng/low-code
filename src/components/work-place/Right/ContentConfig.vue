@@ -17,7 +17,7 @@
     <div v-if="configList.hasOwnProperty('alt')" class="modify-item">
       <div class="property">alt（图片描述）</div>
       <div class="value-input">
-        <TextArea v-model="configList.alt" />
+        <TextArea :placeholder="'输入图片描述'" v-model="configList.alt" />
       </div>
     </div>
 
@@ -33,7 +33,7 @@
       <div class="property">
         <span>上传视频</span>
         <div class="preview-box">
-          <video class="litter-preview" :src="configList.videoSrc">错误</video>
+          <video class="litter-preview" :src="configList.videoSrc" muted autoplay>错误</video>
         </div>
       </div>
       <div class="value-input">
