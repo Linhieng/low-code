@@ -49,15 +49,14 @@ export default class FileUploaderClient {
 
         sliceProgressFunc(currentChunk)
 
-        // 这种方法有概率出现解析停止的情况, 但正常测试情况下暂时没遇到过
+        // 这种方法有概率出现解析停止的情况
         if (this.beginId != this.finishId) {
-          // 运行的比 “新” 的慢就出现解析停止的情况了
-          // setTimeout(() => {
-          this.finishId++
-          // })
           this.md5 = undefined
           this.chunkList = undefined
           this.fileName = undefined
+          // setTimeout(() => {
+          this.finishId++
+          // })
         } else if (currentChunk < chunks) {
           loadNextChunk()
         } else {
