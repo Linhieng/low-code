@@ -23,6 +23,11 @@
       <input @input="modify('left', $event.currentTarget.value + 'px')" class="value" type="range" :value="Number.parseFloat(styleList.left)" :min="styleLimit.left.min" :max="styleLimit.left.max" />
     </div>
 
+    <div v-if="styleList.zIndex" class="modify-item">
+      <p class="property">zIndex: {{ styleList.zIndex }}</p>
+      <input @input="modify('zIndex', $event.currentTarget.value)" class="value" type="range" :value="styleList.zIndex" :min="styleLimit.zIndex.min" :max="styleLimit.zIndex.max" />
+    </div>
+
     <div v-if="styleList.fontSize" class="modify-item">
       <p class="property">font-size: {{ styleList.fontSize }}</p>
       <input @input="modify('fontSize', $event.currentTarget.value + 'px')" class="value" type="range" :value="Number.parseFloat(styleList.fontSize)" :min="styleLimit.fontSize.min" :max="styleLimit.fontSize.max" />

@@ -1,6 +1,6 @@
 <template>
-  <div class="update-image">
-    <div class="btn" @click="show = !show">选择视频</div>
+  <div ref="updateVideo" class="update-video" @click.stop>
+    <div class="btn" @click="show = true">选择视频</div>
     <div v-show="show" ref="updateBox" class="update-box">
       <div class="area">
         <video v-show="previewSrc !== ''" :src="previewSrc" muted autoplay>错误</video>
@@ -12,13 +12,21 @@
         <input ref="input" @change="change" type="file" accept="video/*" placeholder="上传图片到这里来" />
       </div>
       <div class="config">
-        <button class="btn-submit">点击上传</button>
+        <button class="btn-submit" @click="submit">点击上传</button>
+        <div class="status">
+          <p class="status-value" :style="{ color: submitProgress >= 100 ? 'skyblue' : '' }">{{ submitProgress >= 100 ? '已上传' : '未上传' }}</p>
+          <div class="progress">
+            <span class="thumb" :style="{ width: submitProgress + 'px', filter: `brightness(${1 + submitProgress * 0.002})` }"></span>
+          </div>
+          <!-- <progress max="100" :value="submitProgress"></progress> -->
+        </div>
       </div>
     </div>
   </div>
 </template>
 
 <script>
+import { isAinB } from '@/utils'
 export default {
   emits: ['update:modelValue'],
   props: ['modelValue'],
@@ -26,26 +34,38 @@ export default {
     return {
       previewSrc: '',
       show: false,
+      submitProgress: 0,
     }
   },
   methods: {
     change() {
-      console.log('debugger: ')
       this.previewSrc = window.URL.createObjectURL(this.$refs.input.files[0])
+    },
+    async submit() {
+      if (this.submitProgress > 0) {
+        console.log('debugger: ', '正在上传...')
+        return
+      }
+      // TODO:
+
       this.$emit('update:modelValue', this.previewSrc)
     },
   },
   watch: {
     show() {
-      this.previewSrc = ''
-      this.$emit('update:modelValue', this.previewSrc)
+      if (this.$refs.input.files[0] === undefined) this.previewSrc = ''
     },
+  },
+  mounted() {
+    document.addEventListener('click', e => {
+      if (!isAinB(e.target, this.$refs.updateVideo)) this.show = false
+    })
   },
 }
 </script>
 
 <style lang="scss">
-.update-image {
+.update-video {
   width: 150px;
   height: 40px;
   position: absolute;
@@ -110,9 +130,39 @@ export default {
       height: 60px;
       display: flex;
       align-items: center;
+      justify-content: space-between;
       button {
+        flex: none;
         width: 100px;
         height: 34px;
+      }
+      .status {
+        width: 200px;
+        display: flex;
+        align-items: center;
+
+        .status-value {
+          width: 50px;
+          margin: 0 10px;
+        }
+        .progress {
+          flex: none;
+          width: 100px;
+          height: 10px;
+          border-radius: 5px;
+          border: 1px solid #d1d1d1;
+          position: relative;
+          overflow: hidden;
+          .thumb {
+            display: block;
+            height: 10px;
+            position: absolute;
+            top: 0;
+            left: 0;
+            background-color: skyblue;
+            transition: 0.3s;
+          }
+        }
       }
     }
   }

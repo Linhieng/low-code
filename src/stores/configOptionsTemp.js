@@ -24,6 +24,12 @@ const limitFunction = {
     const maxLeft = left + 500
     return { min: minLeft, max: maxLeft }
   },
+  zIndex() {
+    return {
+      min: 2,
+      max: 999,
+    }
+  },
   fontSize() {
     return { min: 12, max: 40 }
   },

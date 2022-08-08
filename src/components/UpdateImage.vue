@@ -1,18 +1,18 @@
 <template>
-  <div class="update-image">
-    <div class="btn" @click="show = !show">选择图片</div>
+  <div class="update-image" @click.stop>
+    <div class="btn" @click="show = true">选择图片</div>
     <div v-show="show" ref="updateBox" class="update-box">
       <div class="area">
         <img v-show="previewSrc !== ''" :src="previewSrc" alt="图片预览" />
         <span>
-          点击上传图片
+          点击选择图片
           <br />
           或者拖拽图片这里来
         </span>
         <input ref="input" @change="change" type="file" accept="image/*" placeholder="上传图片到这里来" />
       </div>
       <div class="config">
-        <button class="btn-submit">点击上传</button>
+        <button class="btn-submit" @click="submit">点击上传</button>
       </div>
     </div>
   </div>
@@ -30,15 +30,17 @@ export default {
   },
   methods: {
     change() {
-      console.log('debugger: ')
       this.previewSrc = window.URL.createObjectURL(this.$refs.input.files[0])
+    },
+    submit() {
+      console.log('debugger: ', this.previewSrc)
+      // TODO: 上传服务器并获取图片链接(此链接应为上传到服务器的缓存区)
       this.$emit('update:modelValue', this.previewSrc)
     },
   },
   watch: {
     show() {
-      this.previewSrc = ''
-      this.$emit('update:modelValue', this.previewSrc)
+      if (this.$refs.input.files[0] === undefined) this.previewSrc = ''
     },
   },
 }
@@ -49,6 +51,7 @@ export default {
   width: 150px;
   height: 40px;
   position: absolute;
+  z-index: 1;
 
   .btn {
     width: 100%;

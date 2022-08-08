@@ -1,6 +1,10 @@
 <template>
-  <div v-if="configOptions.id === id" @click="modify" class="ele-item ele-active" :style="styleTemp">图片</div>
-  <div v-else @click="modify" class="ele-item" :style="style">图片</div>
+  <div v-if="configOptions.id === id" @click="modify" class="ele-item ele-active" :style="styleTemp">
+    <img :src="configTemp.src" :alt="configTemp.alt" :style="{ objectFit: styleTemp.objectFit, objectPosition: styleTemp.objectPosition }" />
+  </div>
+  <div v-else @click="modify" class="ele-item" :style="style">
+    <img :src="config.src" :alt="config.alt" :style="{ objectFit: style.objectFit, objectPosition: style.objectPosition }" />
+  </div>
 </template>
 
 <script>
@@ -37,3 +41,10 @@ export default {
   },
 }
 </script>
+
+<style lang="scss" scoped>
+img {
+  width: 100%;
+  height: 100%;
+}
+</style>

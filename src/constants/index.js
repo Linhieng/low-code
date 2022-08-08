@@ -69,7 +69,7 @@ export const ELEMENT_LAYOUT = {
 // ELEMENT_STYLE_TOGETHER 是所有组件共同拥有的可配置样式
 // ELEMENT_STYLE 是各个组件各自的可配置样式
 // ELEMENT_CONFIG 是各个组件各自的可配置选项（不是样式）
-const ELEMENT_STYLE_TOGETHER = { width: '', height: '', top: '', left: '' }
+const ELEMENT_STYLE_TOGETHER = { width: '', height: '', top: '', left: '', zIndex: 2 }
 export const ELEMENT_STYLE = {
   [ELEMENT_TEXT]: {
     ...ELEMENT_STYLE_TOGETHER,
@@ -89,6 +89,8 @@ export const ELEMENT_STYLE = {
   },
   [ELEMENT_IMAGE]: {
     ...ELEMENT_STYLE_TOGETHER,
+    objectFit: 'none',
+    objectPosition: 'center',
   },
   [ELEMENT_LINK]: {
     ...ELEMENT_STYLE_TOGETHER,
@@ -110,10 +112,11 @@ export const ELEMENT_CONFIG = {
   },
   [ELEMENT_BUTTON]: {
     innerText: '按钮',
+    title: '按钮描述',
   },
   [ELEMENT_IMAGE]: {
     alt: '',
-    url: '',
+    src: '',
   },
   [ELEMENT_LINK]: {
     innerText: '',
