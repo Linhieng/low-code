@@ -2,8 +2,24 @@
   <div id="draw" ref="drawWrapper" @drop="drop($event)" @dragover="dragover" @dragenter="dragenter" @dragleave="dragleave">
     <div ref="shadowComponent" id="shadow-component"></div>
     <!-- TODO: 这两个可用作提示, 先简单处理 -->
-    <div id="upBox"></div>
-    <div id="downBox"></div>
+    <!-- <div id="upBox"></div>
+    <div id="downBox"></div> -->
+    <div ref="upBox" class="tip-box" id="upBox">
+      <span class="svg">
+        <svg viewBox="0 0 100 100" version="1.1" xmlns="http://www.w3.org/2000/svg" stroke="transparent">
+          <path d=" M 50 10 l 86.605   50 a 0.4 0.4 30 0 0 2 -3.4642 l  -86.605   -50 c  -1 -0.8 -3 -0.8 -4 0 l -86.605   50 a 0.4 0.4 30 0 0 2 3.4642 l 86.605   -50"></path>
+          <path d=" M 50 25 l 90.0692   52 a 0.4 0.4 30 0 0 2 -3.4642 l  -90.0692   -52 c  -1 -0.8 -3 -0.8 -4 0 l -90.0692   52 a 0.4 0.4 30 0 0 2 3.4642 l 90.0692   -52"></path>
+        </svg>
+      </span>
+    </div>
+    <div ref="downBox" class="tip-box" id="downBox">
+      <span class="svg">
+        <svg viewBox="0 0 100 100" version="1.1" xmlns="http://www.w3.org/2000/svg" stroke="transparent">
+          <path d=" M 50 10 l 86.605   50 a 0.4 0.4 30 0 0 2 -3.4642 l  -86.605   -50 c  -1 -0.8 -3 -0.8 -4 0 l -86.605   50 a 0.4 0.4 30 0 0 2 3.4642 l 86.605   -50"></path>
+          <path d=" M 50 25 l 90.0692   52 a 0.4 0.4 30 0 0 2 -3.4642 l  -90.0692   -52 c  -1 -0.8 -3 -0.8 -4 0 l -90.0692   52 a 0.4 0.4 30 0 0 2 3.4642 l 90.0692   -52"></path>
+        </svg>
+      </span>
+    </div>
     <!-- NOTE: id 是数字类型, 如果后面改了, 记得修改子组件中 props 中的验证 -->
     <component v-for="ele in drawData.elementArr" :id="ele.id" :key="ele.id" :is="ele.type" :draggable="configOptions.id !== ele.id" @dragstart="dragstart($event, ele.id)"></component>
   </div>
@@ -53,6 +69,17 @@ export default {
       const drawBottom = drawHeight - shadowTop - shadowHeight
       const pageTop = shadowTop - window.scrollY
       const pageBottom = window.innerHeight - drawTop - pageTop - shadowHeight
+
+      if (pageBottom <= 200) {
+        this.$refs.downBox.style.display = 'block'
+        this.$refs.upBox.style.display = 'none'
+      } else if (pageTop <= 200) {
+        this.$refs.upBox.style.display = 'block'
+        this.$refs.downBox.style.display = 'none'
+      } else {
+        this.$refs.upBox.style.display = 'none'
+        this.$refs.downBox.style.display = 'none'
+      }
 
       if (pageBottom <= 100) {
         if (drawBottom <= 100) {
@@ -126,5 +153,38 @@ export default {
 // 选中某个元素（修改配置）
 .ele-active {
   box-shadow: 0 0 10px 0px skyblue;
+}
+</style>
+
+<style lang="scss" scoped>
+.tip-box {
+  display: none;
+  .svg {
+    display: block;
+    width: 200px;
+    height: 100px;
+    margin: auto;
+    opacity: 0.1;
+
+    svg {
+      width: 100%;
+      height: 100%;
+      fill: #ddd;
+    }
+  }
+}
+
+#upBox .svg {
+  margin-top: 10px;
+  @include tip-up-up;
+}
+
+#downBox .svg {
+  margin-top: -15px;
+  @include tip-down-down;
+
+  svg {
+    transform: rotate(-180deg);
+  }
 }
 </style>
