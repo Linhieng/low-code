@@ -97,6 +97,7 @@ export const ELEMENT_STYLE = {
     color: '#666',
     lineHeight: '40px',
     backgroundColor: '#FFF',
+    textDecoration:'underline',
   },
   [ELEMENT_VIDEO]: {
     ...ELEMENT_STYLE_TOGETHER,
@@ -114,7 +115,7 @@ export const ELEMENT_CONFIG = {
     url: '',
   },
   [ELEMENT_LINK]: {
-    innerText: '',
+    innerText: '链接',
     url: '',
   },
   [ELEMENT_VIDEO]: {

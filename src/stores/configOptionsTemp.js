@@ -38,6 +38,14 @@ const limitFunction = {
       enumOptions: ['left', 'center', 'right'],
     }
   },
+  
+  //link的选型新增
+
+  textDecoration() {
+    return {
+      enumOptions: ['underline', 'overline', 'line-through','none'],
+    }
+  },
 
   // 颜色没什么需要限制的, 因为使用取色板, 但是该属性还是得存在
 

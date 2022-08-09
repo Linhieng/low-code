@@ -4,6 +4,7 @@
 
     <div v-if="styleList.width" class="modify-item">
       <p class="property">width: {{ styleList.width }}</p>
+      <div class="key-option" :class="{ active: styleList.width === 'auto' }" @click="modify('width', 'auto')">auto</div>
       <input @input="modify('width', $event.currentTarget.value + 'px')" class="value" type="range" :value="Number.parseFloat(styleList.width)" :min="styleLimit.width.min" :max="styleLimit.width.max" />
     </div>
 
@@ -39,6 +40,15 @@
       <p class="property">text-align: {{ styleList.textAlign }}</p>
       <ul class="ul-value">
         <li v-for="(option, i) in styleLimit.textAlign.enumOptions" :key="i" :class="{ active: styleList.textAlign === option }" @click="modify('textAlign', option)">{{ option }}</li>
+      </ul>
+    </div>
+
+    <!-- 新增的text-decoration -->
+
+    <div v-if="styleList.textDecoration" class="modify-item">
+      <p class="property">text-decoration: {{ styleList.textDecoration }}</p>
+      <ul class="ul-value">
+        <li v-for="(option, i) in styleLimit.textDecoration.enumOptions" :key="i" :class="{ active: styleList.textDecoration === option }" @click="modify('textDecoration', option)">{{ option }}</li>
       </ul>
     </div>
 

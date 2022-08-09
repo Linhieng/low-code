@@ -6,6 +6,12 @@
         <TextArea v-model="configList.innerText" />
       </div>
     </div>
+    <div v-if="configList.hasOwnProperty('url')" class="modify-item">
+      <p class="property">url（跳转链接）</p>
+      <div class="value-input">
+        <TextArea v-model="configList.url" />
+      </div>
+    </div>
   </div>
 </template>
 
