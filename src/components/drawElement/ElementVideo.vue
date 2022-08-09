@@ -41,7 +41,6 @@ export default {
       return JSON.parse(JSON.stringify(this.configOptions.style))
     },
     config() {
-      console.log('debugger: ', JSON.parse(JSON.stringify(this.drawData.elementConfig[this.id].config)))
       return JSON.parse(JSON.stringify(this.drawData.elementConfig[this.id].config))
     },
     configTemp() {

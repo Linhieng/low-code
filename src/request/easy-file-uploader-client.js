@@ -91,7 +91,7 @@ export default class FileUploaderClient {
 
   // 中断解析过程
   stopSlice() {
-    this.beginId++
+    if (this.beginId === this.finishId) this.beginId++
   }
 
   /**

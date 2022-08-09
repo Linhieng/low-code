@@ -100,7 +100,7 @@ export default {
   },
   methods: {
     modify(property, value) {
-      this.configOption.style[property] = value
+      this.configOption.modifyStyle(property, value)
     },
   },
 }

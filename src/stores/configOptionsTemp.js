@@ -63,16 +63,17 @@ const limitFunction = {
 
 // 存储当前正在修改配置的可配置项
 export default defineStore('configOptionsTemp', {
-  // 这些值都会带上单位
   state: () => ({
     show: false,
     id: -1,
+    hasSave: true,
     config: {}, // 非样式可配置项
-    style: {},
+    style: {}, // 这些值都会带上单位
     styleLimit: {}, // 限制输入范围
   }),
   actions: {
     open(id) {
+      this.hasSave = true
       this.show = true
       this.id = id
       const drawData = useDrawData()
@@ -87,23 +88,26 @@ export default defineStore('configOptionsTemp', {
     save() {
       const drawData = useDrawData()
       drawData.update(this.id, this.style, this.config)
+      this.hasSave = true
     },
     reset() {
       const drawData = useDrawData()
       this.config = JSON.parse(JSON.stringify(drawData.elementConfig[this.id].config))
       this.style = JSON.parse(JSON.stringify(drawData.elementConfig[this.id].style))
+      this.hasSave = true
     },
     close() {
       this.show = false
       this.id = -1
     },
-    // modify(property, value) {
-    // 一般来说，不要直接修改 state 比较好，将修改的方式的放在 actions 中比较好
-    // 这样后续需要校验什么的比较方便
-    // 但是在这里，条件限制已经交给了 styleLimit
-    // 而且某些操作上，直接修改 state 更方便
-    // 所以对于 configOptionsTemp 的数据修改，直接通过 state 修改
-    // this.style[property] = value
-    // },
+    // 还是要求修改值时都要通过 action 修改, 这样可以监控变化
+    modifyStyle(property, value) {
+      this.style[property] = value
+      this.hasSave = false
+    },
+    modifyConfig(property, value) {
+      this.config[property] = value
+      this.hasSave = false
+    },
   },
 })

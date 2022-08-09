@@ -1,13 +1,14 @@
 <template>
-  <div ref="updateVideo" class="update-video" @click.stop>
-    <div class="btn" @click="show = true">选择视频</div>
+  <div ref="updateEle" class="update-wrapper" @click.stop>
+    <div class="btn" @click="show = true">选择{{ typeValue }}</div>
     <div v-show="show" ref="updateBox" class="update-box">
       <div class="area">
-        <video v-show="previewSrc !== ''" :src="previewSrc" muted autoplay>错误</video>
+        <video v-if="type === 'video'" class="area-preview" v-show="previewSrc !== ''" :src="previewSrc" muted autoplay>错误</video>
+        <img v-else-if="type === 'image'" class="area-preview" v-show="previewSrc !== ''" :src="previewSrc" alt="图片预览" />
         <span v-show="totalSlice === 0">
-          点击上传视频
+          点击上传{{ typeValue }}
           <br />
-          或者拖拽视频这里来
+          或者拖拽{{ typeValue }}这里来
         </span>
         <div class="parse-status" v-show="totalSlice !== 0 && !finishSlice">
           <span class="cover"></span>
@@ -16,11 +17,16 @@
             <span class="thumb" :style="{ width: sliceProgress + '%', filter: `brightness(${1 + sliceProgress * 0.002})` }"></span>
           </div>
         </div>
-        <input ref="input" @change="selectFile" type="file" accept="video/*" />
+        <input ref="input" @change="selectFile" type="file" :accept="`${type}/*`" />
       </div>
 
       <div class="config">
-        <button class="btn-submit" :class="{ forbidden: this.statusInfo !== '待上传' }" @click="submit">点击上传</button>
+        <button class="btn-submit" :class="btnClass" @click="submit">
+          <span>{{ this.uploadError ? '重新上传' : '点击上传' }}</span>
+          <span class="retry">
+            <svg t="1660002083572" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="1556" width="200" height="200"><path d="M972.8 102.4c-30.72 0-51.2 20.48-51.2 51.2v51.2c-51.2-71.68-122.88-128-204.8-158.72C460.8-66.56 158.72 51.2 46.08 307.2S51.2 865.28 307.2 977.92 865.28 972.8 977.92 716.8H972.8c0-30.72-20.48-51.2-51.2-51.2s-51.2 20.48-51.2 51.2h-5.12c-46.08 76.8-112.64 138.24-199.68 174.08-209.92 87.04-445.44-15.36-532.48-225.28S148.48 215.04 358.4 133.12c189.44-81.92 404.48 0 506.88 174.08H768c-30.72 0-51.2 20.48-51.2 51.2s20.48 51.2 51.2 51.2h204.8c30.72 0 51.2-20.48 51.2-51.2V153.6c0-30.72-20.48-51.2-51.2-51.2z" p-id="1557"></path></svg>
+          </span>
+        </button>
         <div class="status">
           <p class="status-value" :style="{ color: statusValueColor }">{{ statusInfo }}</p>
           <div class="upload-progress">
@@ -38,7 +44,7 @@ import FileUploaderClient from '@/request/easy-file-uploader-client'
 
 export default {
   emits: ['update:modelValue'],
-  props: ['modelValue'],
+  props: ['modelValue', 'type', 'typeValue'],
   data() {
     return {
       previewSrc: '',
@@ -56,6 +62,11 @@ export default {
     }
   },
   computed: {
+    btnClass() {
+      if (this.statusInfo === '待上传') return
+      if (this.statusInfo === '出错了') return ['uploadError']
+      return ['forbidden']
+    },
     statusInfo() {
       if (this.uploadError) return '出错了'
       if (this.totalSlice === 0) return '未选择'
@@ -70,7 +81,7 @@ export default {
       if (this.statusInfo === '解析中') return '#ddd'
       if (this.statusInfo === '待上传') return '#00F'
       if (this.statusInfo === '上传中') return 'skyblue'
-      if (this.statusInfo === '已上传') return '#aaa'
+      if (this.statusInfo === '已上传') return 'deepskyblue'
     },
   },
   methods: {
@@ -104,12 +115,13 @@ export default {
       )
     },
     async submit() {
-      // TODO:
+      // 出错时, 可以再次点击上传按钮
       const file = this.$refs.input.files[0]
       if (!(file instanceof File)) return
       if (!this.finishSlice) return
       if (this.startUpload) return
       if (this.finishUpload) return
+      this.uploadError = false
 
       try {
         await this.fileUploaderClient.uploadFile(
@@ -139,7 +151,7 @@ export default {
   },
   mounted() {
     document.addEventListener('click', e => {
-      if (!isAinB(e.target, this.$refs.updateVideo)) this.show = false
+      if (!isAinB(e.target, this.$refs.updateEle)) this.show = false
     })
     // 该组件只会上传一个文件, 所以直接在这里初始化
     this.fileUploaderClient = new FileUploaderClient()
@@ -148,7 +160,7 @@ export default {
 </script>
 
 <style lang="scss">
-.update-video {
+.update-wrapper {
   width: 150px;
   height: 40px;
   position: absolute;
@@ -198,7 +210,7 @@ export default {
         position: absolute;
         z-index: 2;
       }
-      > video {
+      > .area-preview {
         width: 100%;
         height: 100%;
         position: absolute;
@@ -265,9 +277,36 @@ export default {
         flex: none;
         width: 100px;
         height: 34px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        > span {
+          font-weight: bold;
+        }
+        .retry {
+          width: 14px;
+          height: 14px;
+          margin-left: 4px;
+          display: none;
+          svg {
+            width: 100%;
+            height: 100%;
+          }
+        }
         &.forbidden {
           cursor: not-allowed;
           filter: brightness(0.8);
+        }
+        &.uploadError {
+          > span {
+            color: #f00;
+          }
+          .retry {
+            display: block;
+            svg {
+              fill: #f00;
+            }
+          }
         }
       }
 

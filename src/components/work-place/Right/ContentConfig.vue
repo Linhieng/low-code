@@ -3,21 +3,21 @@
     <div v-if="configList.hasOwnProperty('innerText')" class="modify-item">
       <div class="property">innerText（按钮文字）</div>
       <div class="value-input">
-        <TextArea v-model="configList.innerText" />
+        <TextArea :modelValue="configList.innerText" @update:modelValue="modify('innerText', $event)" />
       </div>
     </div>
 
     <div v-if="configList.hasOwnProperty('title')" class="modify-item">
       <div class="property">title（按钮描述）</div>
       <div class="value-input">
-        <TextArea v-model="configList.title" />
+        <TextArea :modelValue="configList.title" @update:modelValue="modify('title', $event)" />
       </div>
     </div>
 
     <div v-if="configList.hasOwnProperty('alt')" class="modify-item">
       <div class="property">alt（图片描述）</div>
       <div class="value-input">
-        <TextArea :placeholder="'输入图片描述'" v-model="configList.alt" />
+        <TextArea :placeholder="'输入图片描述'" :modelValue="configList.alt" @update:modelValue="modify('alt', $event)" />
       </div>
     </div>
 
@@ -37,7 +37,7 @@
         </div>
       </div>
       <div class="value-input">
-        <UpdateVideo v-model="configList.videoSrc" />
+        <UpdateFile :type="'video'" :typeValue="'视频'" :modelValue="configList.videoSrc" @update:modelValue="modify('videoSrc', $event)" />
       </div>
     </div>
 
@@ -49,7 +49,7 @@
         </div>
       </div>
       <div class="value-input">
-        <UpdateImage v-model="configList.poster" />
+        <UpdateFile :type="'image'" :typeValue="'封面'" :modelValue="configList.poster" @update:modelValue="modify('poster', $event)" />
       </div>
     </div>
 
@@ -61,7 +61,7 @@
         </div>
       </div>
       <div class="value-input">
-        <UpdateImage v-model="configList.src" />
+        <UpdateFile :type="'image'" :typeValue="'图片'" :modelValue="configList.src" @update:modelValue="modify('src', $event)" />
       </div>
     </div>
   </div>
@@ -70,11 +70,10 @@
 <script>
 import { useConfigOptionsTemp } from '@/stores/index'
 import TextArea from '@/components/TextArea.vue'
-import UpdateImage from '@/components/UpdateImage.vue'
-import UpdateVideo from '@/components/UpdateVideo.vue'
+import UpdateFile from '@/components/UpdateFile.vue'
 
 export default {
-  components: { TextArea, UpdateImage, UpdateVideo },
+  components: { TextArea, UpdateFile },
   data() {
     return {
       configOption: useConfigOptionsTemp(),
@@ -87,7 +86,7 @@ export default {
   },
   methods: {
     modify(property, value) {
-      this.configOption.config[property] = value
+      this.configOption.modifyConfig(property, value)
     },
   },
 }
