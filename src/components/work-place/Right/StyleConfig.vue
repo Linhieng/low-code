@@ -66,8 +66,8 @@
 
     <div v-if="styleList.textDecoration" class="modify-item">
       <p class="property">text-decoration: {{ styleList.textDecoration }}</p>
-      <ul class="ul-value">
-        <li v-for="(option, i) in styleLimit.textDecoration.enumOptions" :key="i" :class="{ active: styleList.textDecoration === option }" @click="modify('textDecoration', option)">{{ option }}</li>
+      <ul class="option-list">
+        <button class="btn-option" v-for="(option, i) in styleLimit.textDecoration.enumOptions" :key="i" :class="{ active: styleList.textDecoration === option }" @click="modify('textDecoration', option)">{{ option }}</button>
       </ul>
     </div>
 

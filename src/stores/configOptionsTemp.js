@@ -44,14 +44,14 @@ const limitFunction = {
       enumOptions: ['left', 'center', 'right'],
     }
   },
-<<<<<<< HEAD
-  
   //link的选型新增
 
   textDecoration() {
     return {
       enumOptions: ['underline', 'overline', 'line-through','none'],
-=======
+    }
+  },
+
   objectFit() {
     return {
       enumOptions: ['contain', 'cover', 'fill', 'none', 'scale-down'],
@@ -60,7 +60,6 @@ const limitFunction = {
   objectPosition() {
     return {
       enumOptions: ['top', 'bottom', 'center', 'left', 'right'],
->>>>>>> main
     }
   },
 
