@@ -1,7 +1,7 @@
 <template>
   <div class="textarea--auto-height" :style="style">
-    <textarea ref="domTextarea" :style="{ height }" :rows="_rows" :placeholder="placeholder" :value="modelValue" @input="$emit('update:modelValue', $event.target.value)" />
     <span class="border"></span>
+    <textarea ref="domTextarea" :style="{ height }" :rows="_rows" :placeholder="placeholder" :value="modelValue" @input="$emit('update:modelValue', $event.target.value)" />
   </div>
 </template>
 

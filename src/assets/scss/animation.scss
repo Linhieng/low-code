@@ -1,21 +1,108 @@
 // 从右侧出现
 @mixin show-right {
-  animation-name: show-right;
+  animation-name    : show-right;
   animation-duration: .3s;
 }
+
 @mixin hidden-right {
-  animation-name: hidden-right;
-  animation-duration: .3s;
+  animation-name     : hidden-right;
+  animation-duration : .3s;
   animation-fill-mode: forwards;
+}
+
+@mixin tip-up-up {
+  animation: tip-up-up 2s linear infinite;
+
+}
+
+@mixin tip-down-down {
+  animation: tip-down-down 2s linear infinite;
+
+}
+
+@keyframes tip-up-up {
+  0% {
+    opacity  : 0;
+    transform: translateY(0);
+  }
+
+  10% {
+    opacity  : 0.5;
+    transform: translateY(-4px);
+  }
+
+  40% {
+    opacity  : 1;
+    transform: scale(1) translateY(-10px);
+  }
+
+  70% {
+    opacity  : 1;
+    transform: scale(1) translateY(-14px);
+  }
+
+  90% {
+    opacity  : 0.1;
+    transform: scale(1) translateY(-10px);
+  }
+
+  94% {
+    opacity  : 0;
+    transform: scale(1) translateY(-10px);
+  }
+
+  100% {
+    opacity  : 0;
+    transform: translateY(0);
+  }
+}
+
+@keyframes tip-down-down {
+  0% {
+    opacity  : 0;
+    transform: translateY(0);
+  }
+
+  10% {
+    opacity  : 0.5;
+    transform: translateY(4px);
+  }
+
+  40% {
+    opacity  : 1;
+    transform: scale(1) translateY(10px);
+  }
+
+  70% {
+    opacity  : 1;
+    transform: scale(1) translateY(14px);
+  }
+
+  90% {
+    opacity  : 0.1;
+    transform: scale(1) translateY(10px);
+  }
+
+  94% {
+    opacity  : 0;
+    transform: scale(1) translateY(10px);
+  }
+
+  100% {
+    opacity  : 0;
+    transform: translateY(0);
+  }
 }
 
 @keyframes show-right {
   0% {
     transform: translateX(300%);
   }
+
   80% {
     transform: translateX(-10%);
   }
+
   100% {
     transform: translateX(0%);
   }
@@ -25,9 +112,11 @@
   0% {
     transform: translateX(0%);
   }
+
   30% {
     transform: translateX(-20%);
   }
+
   100% {
     transform: translateX(300%);
   }

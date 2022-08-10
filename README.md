@@ -30,3 +30,7 @@ $ npm run serve
 * pinia
 * axios
 * easy-file-uploader
+
+## TODO
+
+项目完成后根据根据拥有的配置项，来对 StyleConfig.vue 组件进行重构。

@@ -1,6 +1,23 @@
 <template>
-  <div v-if="configOptions.id === id" @click="modify" class="ele-item ele-active" :style="styleTemp">视频</div>
-  <div v-else @click="modify" class="ele-item" :style="style">视频</div>
+  <div v-if="configOptions.id === id" @click="modify" class="ele-item ele-active" :style="styleTemp">
+    <!-- 这里不自动播放 -->
+    <video :poster="configTemp.poster" :src="configTemp.videoSrc" muted>错误</video>
+    <!-- <video :poster="configTemp.poster">
+      <source :src="configTemp.videoSrc" />
+      无法播放视频，请手动点击
+      <a :href="configTemp.videoSrc">此链接</a>
+      进行观看
+    </video> -->
+  </div>
+  <div v-else @click="modify" class="ele-item" :style="style">
+    <video :poster="config.poster" :src="config.videoSrc" muted autoplay>错误</video>
+    <!-- <video :poster="config.poster">
+      <source :src="config.videoSrc" />
+      无法播放视频，请手动点击
+      <a :href="config.videoSrc">此链接</a>
+      进行观看
+    </video> -->
+  </div>
 </template>
 
 <script>
@@ -37,3 +54,10 @@ export default {
   },
 }
 </script>
+
+<style lang="scss">
+video {
+  width: 100%;
+  height: 100%;
+}
+</style>

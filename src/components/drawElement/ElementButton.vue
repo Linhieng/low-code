@@ -1,6 +1,10 @@
 <template>
-  <div v-if="configOptions.id === id" @click="modify" class="ele-item ele-active" :style="styleTemp">{{ configTemp.innerText }}</div>
-  <div v-else @click="modify" class="ele-item" :style="style">{{ config.innerText }}</div>
+  <div v-if="configOptions.id === id" @click="modify" class="ele-item ele-active" :style="styleTemp">
+    <button :title="configTemp.title">{{ configTemp.innerText }}</button>
+  </div>
+  <div v-else @click="modify" class="ele-item" :style="style">
+    <button :title="config.title">{{ config.innerText }}</button>
+  </div>
 </template>
 
 <script>
@@ -37,3 +41,15 @@ export default {
   },
 }
 </script>
+
+<style lang="scss" scoped>
+button {
+  width: 100%;
+  height: 100%;
+  color: inherit;
+  font-size: inherit;
+  line-height: inherit;
+  background-color: transparent;
+  cursor: pointer;
+}
+</style>
