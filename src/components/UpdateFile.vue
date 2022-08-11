@@ -129,6 +129,7 @@ export default {
 
       try {
         this.startUpload = true
+        this.startUpload = true
         await this.fileUploaderClient.uploadFile(
           1,
           () => {
