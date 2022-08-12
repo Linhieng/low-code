@@ -48,7 +48,7 @@ export default {
   data() {
     return {
       previewSrc: '',
-      show: true,
+      show: false,
 
       fileUploaderClient: null,
       totalSlice: 0,
@@ -69,11 +69,11 @@ export default {
     },
     statusInfo() {
       if (this.uploadError) return '出错了'
+      if (this.finishUpload) return '已上传'
       if (this.totalSlice === 0) return '未选择'
       if (this.sliceProgress < 100) return '解析中'
-      if (this.finishSlice && this.uploadProgress === 0) return '待上传'
-      if (this.uploadProgress <= 100 && !this.finishUpload) return '上传中'
-      if (this.finishUpload) return '已上传'
+      if (this.finishSlice && !this.startUpload) return '待上传'
+      if (this.uploadProgress <= 100 && this.startUpload) return '上传中'
     },
     statusValueColor() {
       if (this.statusInfo === '出错了') return '#F00'
@@ -96,6 +96,7 @@ export default {
       this.url = ''
       this.uploadError = false
       if (file === undefined) {
+        this.previewSrc = ''
         this.fileUploaderClient.clear()
         return
       }
@@ -118,16 +119,22 @@ export default {
       // 出错时, 可以再次点击上传按钮
       const file = this.$refs.input.files[0]
       if (!(file instanceof File)) return
-      if (!this.finishSlice) return
-      if (this.startUpload) return
-      if (this.finishUpload) return
-      this.uploadError = false
+      if (this.uploadError) {
+        this.uploadError = false
+      } else {
+        if (!this.finishSlice) return
+        if (this.startUpload) return
+        if (this.finishUpload) return
+      }
 
       try {
+        this.startUpload = true
+        this.startUpload = true
         await this.fileUploaderClient.uploadFile(
           1,
           () => {
-            this.startUpload = true
+            // 当出错时，不会到达这一步, 视觉效果上会导致从 ”待上传“ —— ”出错了“ 的瞬变
+            // this.startUpload = true
           },
           num => {
             this.uploadProgress = (num * 100) / this.totalSlice

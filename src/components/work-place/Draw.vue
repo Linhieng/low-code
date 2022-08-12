@@ -1,9 +1,7 @@
 <template>
+  <!-- TODO: 高度自适应部分，有时候会卡顿, 可能是高度自适应的 “方法” 不对 -->
   <div id="draw" ref="drawWrapper" @drop="drop($event)" @dragover="dragover" @dragenter="dragenter" @dragleave="dragleave">
     <div ref="shadowComponent" id="shadow-component"></div>
-    <!-- TODO: 这两个可用作提示, 先简单处理 -->
-    <!-- <div id="upBox"></div>
-    <div id="downBox"></div> -->
     <div ref="upBox" class="tip-box" id="upBox">
       <span class="svg">
         <svg viewBox="0 0 100 100" version="1.1" xmlns="http://www.w3.org/2000/svg" stroke="transparent">
@@ -120,12 +118,17 @@ export default {
     dragleave(e) {
       console.log('hook: 离开', e.target.id)
       // NOTE: 该判断条件用于判断鼠标是否离开画布区域。此处不保证无 bug
-      if (e.target.id === 'shadow-component') this.$refs.shadowComponent.removeAttribute('style')
+      if (e.target.id === 'shadow-component')  {
+        this.$refs.upBox.style.display = 'none'
+        this.$refs.downBox.style.display = 'none'
+        this.$refs.shadowComponent.removeAttribute('style')
+      } 
     },
     drop(e) {
       console.log('hook: 放下')
       this.$refs.shadowComponent.removeAttribute('style')
-      console.log('debugger: ', this.dragStyle.id)
+      this.$refs.upBox.style.display = 'none'
+      this.$refs.downBox.style.display = 'none'
       if (this.dragStyle.id === -1) {
         this.drawData.add(this.dragStyle.type, this.getTop(e.pageY), this.getLeft(e.pageX))
       } else {
