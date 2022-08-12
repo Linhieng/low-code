@@ -15,8 +15,11 @@ function numTo16(num) {
   if (num < 16) return '0' + num.toString(16).toUpperCase()
   return num.toString(16).toUpperCase()
 }
-export function rgb2Hex(rgb) {
+export function rgba2Hex(rgb) {
   return '#' + numTo16(rgb[0]) + numTo16(rgb[1]) + numTo16(rgb[2]) + numTo16(rgb[3])
+}
+export function rgb2Hex(rgb) {
+  return '#' + numTo16(rgb[0]) + numTo16(rgb[1]) + numTo16(rgb[2])
 }
 
 export function isAinB(A, B) {

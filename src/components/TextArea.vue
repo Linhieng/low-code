@@ -1,7 +1,7 @@
 <template>
   <div class="textarea--auto-height" :style="style">
     <span class="border"></span>
-    <textarea ref="domTextarea" :style="{ height }" :rows="_rows" :placeholder="placeholder" :value="modelValue" @input="$emit('update:modelValue', $event.target.value)" />
+    <textarea ref="domTextarea" :style="{ height }" :rows="_rows" :placeholder="placeholder" :value="modelValue" @change="$emit('change', $event.target.value)" @input="$emit('update:modelValue', $event.target.value)" />
   </div>
 </template>
 
@@ -9,7 +9,7 @@
 import calcTextareaHeight from '@/utils/calcTextareaHeight'
 
 export default {
-  emits: ['update:modelValue'],
+  emits: ['update:modelValue', 'change'],
   props: {
     style: Object,
     modelValue: String,

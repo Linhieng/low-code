@@ -97,7 +97,7 @@ export const ELEMENT_STYLE = {
     fontSize: '16px',
     textAlign: 'center',
     color: '#666',
-    lineHeight: '40px',
+    lineHeight: '30px',
     backgroundColor: '#FFF',
     textDecoration:'underline',
   },
@@ -120,8 +120,8 @@ export const ELEMENT_CONFIG = {
     src: '',
   },
   [ELEMENT_LINK]: {
-    innerText: '链接',
-    url: '',
+    innerText: '链接标题',
+    href: '',
   },
   [ELEMENT_VIDEO]: {
     videoSrc: '',

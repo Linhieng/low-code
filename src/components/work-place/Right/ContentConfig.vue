@@ -1,5 +1,6 @@
 <template>
   <div class="modify-config">
+    <!-- 输入文本 -->
     <div v-if="configList.hasOwnProperty('innerText')" class="modify-item">
       <div class="property">innerText（按钮文字）</div>
       <div class="value-input">
@@ -21,8 +22,16 @@
       </div>
     </div>
 
+    <div v-if="configList.hasOwnProperty('href')" class="modify-item">
+      <p class="property">href（跳转链接）</p>
+      <div class="value-input">
+        <TextArea :placeholder="'请输入合法的网页链接, 如 https://example.com'"  :modelValue="configList.href" :rows="2" @update:modelValue="modify('href', $event)" @change="check('href', $event)" />
+      </div>
+    </div>
+
+    <!-- 选项 -->
     <div v-if="configList.hasOwnProperty('muted')" class="modify-item">
-      <div class="property">静音</div>
+      <div class="property">muted（静音）</div>
       <div class="value-select">
         <button class="btn-option" :class="{ active: configList.muted === true }" @click="modify('muted', true)">true</button>
         <button class="btn-option" :class="{ active: configList.muted === false }" @click="modify('muted', false)">false</button>
@@ -64,12 +73,7 @@
         <UpdateFile :type="'image'" :typeValue="'图片'" :modelValue="configList.src" @update:modelValue="modify('src', $event)" />
       </div>
     </div>
-    <div v-if="configList.hasOwnProperty('url')" class="modify-item">
-      <p class="property">url（跳转链接）</p>
-      <div class="value-input">
-        <TextArea v-model="configList.url" />
-      </div>
-    </div>
+
   </div>
 </template>
 
@@ -94,6 +98,17 @@ export default {
     modify(property, value) {
       this.configOption.modifyConfig(property, value)
     },
+    check(property, value) {
+      if (property === 'href') {
+        const href = value.trim()
+        const reg = /^(?:http(s)?:\/\/)?[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:/?#[\]@!\$&'\(\)\*\+,;=.]+$/
+        if (value !== '' && !reg.test(href)) {
+          this.$msg('链接不合法', 'error')
+          this.configOption.modifyConfig('href', '')
+        }
+      }
+
+    }
   },
 }
 </script>
@@ -149,7 +164,7 @@ export default {
   }
   .value-input {
     width: 100%;
-    height: 50px;
+    min-height: 50px;
     display: flex;
     align-items: center;
   }

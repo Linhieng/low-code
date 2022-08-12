@@ -81,6 +81,7 @@ export default defineStore('configOptionsTemp', {
   }),
   actions: {
     open(id) {
+      if (this.id === id) return
       this.hasSave = true
       this.show = true
       this.id = id

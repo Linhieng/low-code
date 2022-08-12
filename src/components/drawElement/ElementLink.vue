@@ -1,6 +1,10 @@
 <template>
-  <div v-if="configOptions.id === id" @click="modify" class="ele-item ele-active" :style="styleTemp">{{ configTemp.innerText }}</div>
-  <div v-else @click="modify" class="ele-item" :style="style">{{ config.innerText }}</div>
+  <div v-if="configOptions.id === id" @click="modify" class="ele-item ele-active" :style="styleTemp">
+    <a  @click="e => e.preventDefault()" :href="configTemp.href">{{ configTemp.innerText }}</a>
+  </div>
+  <div v-else @click="modify" class="ele-item" :style="style">
+    <a  @click="e => e.preventDefault()" :href="config.href">{{ config.innerText }}</a>
+  </div>
 </template>
 
 <script>
@@ -33,16 +37,20 @@ export default {
   methods: {
     modify() {
       this.configOptions.open(this.id)
-      /* 校验链接正确性 */
-      const check = /^(?:http(s)?:\/\/)?[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:/?#[\]@!\$&'\(\)\*\+,;=.]+$/
-      if (this.config.url !== '') {
-        if (check.test(this.config.url)) {
-          window.open(this.config.url)
-        } else {
-          this.$msg('请输入正确的网址', 'danger')
-        }
-      }
     },
   },
 }
 </script>
+
+<style scoped>
+
+a {
+    font-size:inherit;
+    text-align:inherit;
+    color:inherit;
+    line-height:inherit;
+    background-color:inherit;
+    text-decoration:inherit;
+}
+
+</style>
