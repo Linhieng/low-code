@@ -14,7 +14,7 @@
       <input @input="modify('height', $event.currentTarget.value + 'px')" class="value" type="range" :value="Number.parseFloat(styleList.height)" :min="styleLimit.height.min" :max="styleLimit.height.max" />
     </div>
 
-    <div v-if="styleList.top" class="modify-item">
+    <!-- <div v-if="styleList.top" class="modify-item">
       <p class="property">top: {{ styleList.top }}</p>
       <input @input="modify('top', $event.currentTarget.value + 'px')" class="value" type="range" :value="Number.parseFloat(styleList.top)" :min="styleLimit.top.min" :max="styleLimit.top.max" />
     </div>
@@ -22,7 +22,7 @@
     <div v-if="styleList.left" class="modify-item">
       <p class="property">left: {{ styleList.left }}</p>
       <input @input="modify('left', $event.currentTarget.value + 'px')" class="value" type="range" :value="Number.parseFloat(styleList.left)" :min="styleLimit.left.min" :max="styleLimit.left.max" />
-    </div>
+    </div> -->
 
     <div v-if="styleList.zIndex" class="modify-item">
       <p class="property">zIndex: {{ styleList.zIndex }}</p>
@@ -107,7 +107,21 @@ export default {
     styleLimit() {
       return this.configOption.styleLimit
     },
+    fontSizeMax(){
+      return this.configOption.styleLimit.fontSize.max
+    }
   },
+  // watch:{
+  //   styleList:{
+  //     handler(n,o){
+  //       this.styleLimit.lineHeight.max = Number.parseFloat(n.fontSize) + 2 * (Number.parseFloat(n.height) - Number.parseFloat(n.fontSize))
+  //        const fontPadding = (Number.parseFloat(n.lineHeight) - Number.parseFloat(n.fontSize)) / 2
+  //       const bottomDistance = Number.parseFloat(n.height) - fontPadding - Number.parseFloat(n.fontSize)
+  //       this.styleLimit.fontSize.max= fontPadding > bottomDistance ? (bottomDistance * 2 + Number.parseFloat(n.fontSize)) : (fontPadding * 2 + Number.parseFloat(n.fontSize))
+  //     },
+  //     deep:true
+  //   }
+  // },
   methods: {
     modify(property, value) {
       this.configOption.modifyStyle(property, value)

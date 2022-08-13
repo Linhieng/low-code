@@ -64,8 +64,10 @@ export default {
       const shadowHeight = Number.parseFloat(this.dragStyle.height)
       const drawTop = Number.parseFloat(this.dragStyle.drawTop)
       const drawHeight = this.dragStyle.drawHeight
+      //影子离画布底部的距离
       const drawBottom = drawHeight - shadowTop - shadowHeight
       const pageTop = shadowTop - window.scrollY
+      //影子离页面底部的距离
       const pageBottom = window.innerHeight - drawTop - pageTop - shadowHeight
 
       if (pageBottom <= 200) {
