@@ -111,6 +111,10 @@ export default defineStore('configOptionsTemp', {
       this.show = false
       this.id = -1
     },
+    del() {
+      const drawData = useDrawData()
+      drawData.del(this.id)
+    },
     // 还是要求修改值时都要通过 action 修改, 这样可以监控变化
     modifyStyle(property, value) {
       this.style[property] = value

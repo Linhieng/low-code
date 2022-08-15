@@ -32,3 +32,10 @@ export function isAinB(A, B) {
   }
   return false
 }
+
+// 当路径为 /page/id, i 为 1 获取到的就是 第二个参数 id
+export function getPath(i = 1) {
+  const pathName = window.location.pathname // 例如 /fill-in/123
+  const path = pathName.split('/').filter(v => !!v) // 过滤空字符
+  return path[i]
+}

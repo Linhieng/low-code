@@ -2,6 +2,7 @@ const KoaRouter = require('koa-router')
 const multer = require('@koa/multer')
 const path = require('path')
 const { FileUploaderServer } = require('easy-file-uploader-server')
+const {addPage, getPage, getAllPages, log} = require('./util')
 
 const upload = multer()
 const router = KoaRouter()
@@ -31,6 +32,58 @@ router.post('/api/finishUpload', async (ctx, next) => {
   const { path: filePathOnServer } = await fileUploader.finishFilePartUpload(uploadId, name, md5)
   const suffix = filePathOnServer.split(`${path.sep}public${path.sep}`)[1]
   ctx.body = { path: suffix }
+  await next()
+})
+
+// NOTE: 后台代码，现在只要求 “能跑就行”
+
+router.post('/api/uploadPage', async (ctx, next) => {
+  log(ctx)
+  try {
+    const id = addPage(JSON.stringify(ctx.request.body))
+    ctx.status = 200
+    ctx.body = { id }
+  } catch (error) {
+    console.error('上传页面出错, ', error)
+    ctx.status = 500
+    ctx.body = {msg: error.message}
+  }
+
+  await next()
+})
+
+router.get('/api/page/:id', async (ctx, next) => {
+  log(ctx)
+  const id = ctx.params.id
+  try {
+    ctx.body = {drawData: getPage(id)}
+    ctx.status = 200
+  } catch (error) {
+    if (error.code === 'ENOENT') {
+      console.error('不存在该文件', id)
+      ctx.body = {msg: '不存在该文件'}
+      ctx.status = 404
+    } else {
+      console.error('读取文件时出错', error)
+      ctx.status = 500
+      ctx.body = {msg: error.message}
+    }
+  }
+
+  await next()
+})
+
+router.get('/api/getAllPages', async (ctx, next) => {
+  log(ctx)
+  try {
+    ctx.body = {allId: getAllPages()}
+    ctx.status = 200
+  } catch (error) {
+    console.error('获取所有文件时出错', error)
+    ctx.status = 500
+    ctx.body = {msg: error.message}
+  }
+
   await next()
 })
 

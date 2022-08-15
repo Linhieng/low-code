@@ -38,7 +38,7 @@ export default {
 }
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 #left.close {
   transform: translateX(-100%);
   .btn_toggle button.open {

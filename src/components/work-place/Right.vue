@@ -2,6 +2,8 @@
   <div ref="right" id="right" v-show="this.configOptions.show">
     <h2>
       <p>配置 {{ configOptions.id }}</p>
+      <!-- TODO: 提示是否要删除 -->
+      <button @click="del" class="options_del btn-attention">删除组件</button>
       <button @click="close" title="关闭" class="options_close">
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="coral-icon coral-icon-close_line"><path d="M13.414 12l6.293-6.293a.999.999 0 10-1.414-1.414L12 10.586 5.707 4.293a.997.997 0 00-1.414 0 .999.999 0 000 1.414L10.586 12l-6.293 6.293a.999.999 0 101.414 1.414L12 13.414l6.293 6.293a.997.997 0 001.414 0 .999.999 0 000-1.414L13.414 12z" fill-rule="evenodd"></path></svg>
       </button>
@@ -44,6 +46,11 @@ export default {
     }
   },
   methods: {
+    del() {
+      this.configOptions.del()
+      this.close()
+      this.$msg('已删除', 'success')
+    },
     close() {
       const right = this.$refs.right
       right.classList.add('close-animation')
@@ -83,6 +90,15 @@ export default {
     font-size: 30px;
     height: max-content;
     line-height: 100%;
+  }
+  .options_del {
+    width: 100px;
+    height: 34px;
+    display: grid;
+    place-content: center;
+    background-color: #f00;
+    color: #FFF;
+    text-align: center;
   }
   .options_close {
     padding: 20px;

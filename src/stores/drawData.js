@@ -1,6 +1,7 @@
 // 存储创建的组件内容
 import { defineStore } from 'pinia'
 import { ELEMENT_LAYOUT, ELEMENT_CONFIG, ELEMENT_STYLE } from '@/constants/index'
+import uploadPage from "@/request/upload-page"
 
 export default defineStore('drawData', {
   state: () => ({
@@ -33,5 +34,30 @@ export default defineStore('drawData', {
       this.elementConfig[id].style = style
       this.elementConfig[id].config = config
     },
+    del(id) {
+      delete this.elementConfig[id]
+
+      const tmp = this.elementArr
+      tmp.splice(tmp.find(({ i }) => i === id), 1)
+      this.elementArr = tmp
+    },
+    publish() {
+      return new Promise(async (res, rej) => {
+        try {
+          const data = await uploadPage({
+            elementArr: this.elementArr,
+            elementConfig: this.elementConfig,
+          })
+          if (data.status === 'success') {
+            res(data.data)
+          } else {
+            rej(data.data)
+          }
+        } catch (error) {
+          console.error(error)
+          rej(error.message)
+        }
+      })
+    }
   },
 })

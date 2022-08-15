@@ -3,23 +3,43 @@
   animation-name    : show-right;
   animation-duration: .3s;
 }
+@keyframes show-right {
+  0% {
+    transform: translateX(300%);
+  }
 
+  80% {
+    transform: translateX(-10%);
+  }
+
+  100% {
+    transform: translateX(0%);
+  }
+}
+// 从右侧隐藏
 @mixin hidden-right {
   animation-name     : hidden-right;
   animation-duration : .3s;
   animation-fill-mode: forwards;
 }
+@keyframes hidden-right {
+  0% {
+    transform: translateX(0%);
+  }
 
+  30% {
+    transform: translateX(-20%);
+  }
+
+  100% {
+    transform: translateX(300%);
+  }
+}
+// 提示向上
 @mixin tip-up-up {
   animation: tip-up-up 2s linear infinite;
 
 }
-
-@mixin tip-down-down {
-  animation: tip-down-down 2s linear infinite;
-
-}
-
 @keyframes tip-up-up {
   0% {
     opacity  : 0;
@@ -56,7 +76,11 @@
     transform: translateY(0);
   }
 }
+// 提示向下
+@mixin tip-down-down {
+  animation: tip-down-down 2s linear infinite;
 
+}
 @keyframes tip-down-down {
   0% {
     opacity  : 0;
@@ -94,30 +118,18 @@
   }
 }
 
-@keyframes show-right {
-  0% {
-    transform: translateX(300%);
-  }
-
-  80% {
-    transform: translateX(-10%);
-  }
-
-  100% {
-    transform: translateX(0%);
-  }
+// 抖一抖引起注意
+@mixin shake-attention {
+  animation-name: shake-attention;
+  animation-duration: 0.06s;
+  animation-iteration-count: 10;
 }
 
-@keyframes hidden-right {
-  0% {
-    transform: translateX(0%);
-  }
-
-  30% {
-    transform: translateX(-20%);
-  }
-
-  100% {
-    transform: translateX(300%);
-  }
+@keyframes shake-attention {
+  0% { transform: translateX(4%); }
+  100% { transform: translateX(-4%); }
 }
+
+
+
+

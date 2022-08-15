@@ -48,3 +48,21 @@
     filter: brightness(0.96);
   }
 }
+
+.btn-attention {
+  background-color: #F00;
+  color: #000;
+  display: grid;
+  place-content: center;
+  border-radius: 4px;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  user-select: none;
+  &:hover {
+    @include shake-attention;
+  }
+  &:active {
+    filter: brightness(0.9);
+  }
+}

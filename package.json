@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "koa-server": "node server/index.js",
+    "koa-server": "npx nodemon server/index.js",
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build"
   },

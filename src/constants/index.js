@@ -2,11 +2,11 @@
 export const SERVER_HOST = 'http://localhost:10001/'
 
 // 这几个代表拖拽组件对应的 vue 文件名, 他们的值也用于判断组件类型是否相同
-/* export */ const ELEMENT_TEXT = 'ElementText'
-/* export */ const ELEMENT_BUTTON = 'ElementButton'
-/* export */ const ELEMENT_IMAGE = 'ElementImage'
-/* export */ const ELEMENT_LINK = 'ElementLink'
-/* export */ const ELEMENT_VIDEO = 'ElementVideo'
+export  const ELEMENT_TEXT = 'ElementText'
+export  const ELEMENT_BUTTON = 'ElementButton'
+export  const ELEMENT_IMAGE = 'ElementImage'
+export  const ELEMENT_LINK = 'ElementLink'
+export  const ELEMENT_VIDEO = 'ElementVideo'
 
 /*
 ELEMENT_TYPES 保存了项目拥有的所有组件类型。
