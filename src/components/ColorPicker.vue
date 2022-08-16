@@ -164,7 +164,7 @@ export default {
   },
   methods: {
     checkInput() {
-      if (!/^[0-9a-fA-F]{3}$/.test(this.inputColor) && !/^[0-9a-fA-F]{6}$/.test(this.inputColor)) {
+      if (!/^[0-9a-fA-F]{3}$/.test(this.inputColor) && !/^[0-9a-fA-F]{6}$/.test(this.inputColor)&& !/^[0-9a-fA-F]{8}$/.test(this.inputColor)) {
         this.updateColorHex()
       }
     },
