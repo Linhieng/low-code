@@ -1,135 +1,162 @@
 // 从右侧出现
 @mixin show-right {
-  animation-name    : show-right;
-  animation-duration: .3s;
+    animation-name    : show-right;
+    animation-duration: .3s;
 }
+
 @keyframes show-right {
-  0% {
-    transform: translateX(300%);
-  }
+    0% {
+        transform: translateX(300%);
+    }
 
-  80% {
-    transform: translateX(-10%);
-  }
+    80% {
+        transform: translateX(-10%);
+    }
 
-  100% {
-    transform: translateX(0%);
-  }
+    100% {
+        transform: translateX(0%);
+    }
 }
+
 // 从右侧隐藏
 @mixin hidden-right {
-  animation-name     : hidden-right;
-  animation-duration : .3s;
-  animation-fill-mode: forwards;
+    animation-name     : hidden-right;
+    animation-duration : .3s;
+    animation-fill-mode: forwards;
 }
+
 @keyframes hidden-right {
-  0% {
-    transform: translateX(0%);
-  }
+    0% {
+        transform: translateX(0%);
+    }
 
-  30% {
-    transform: translateX(-20%);
-  }
+    30% {
+        transform: translateX(-20%);
+    }
 
-  100% {
-    transform: translateX(300%);
-  }
+    100% {
+        transform: translateX(300%);
+    }
 }
+
 // 提示向上
 @mixin tip-up-up {
-  animation: tip-up-up 2s linear infinite;
+    animation: tip-up-up 2s linear infinite;
 
 }
+
 @keyframes tip-up-up {
-  0% {
-    opacity  : 0;
-    transform: translateY(0);
-  }
+    0% {
+        opacity  : 0;
+        transform: translateY(0);
+    }
 
-  10% {
-    opacity  : 0.5;
-    transform: translateY(-4px);
-  }
+    10% {
+        opacity  : 0.5;
+        transform: translateY(-4px);
+    }
 
-  40% {
-    opacity  : 1;
-    transform: scale(1) translateY(-10px);
-  }
+    40% {
+        opacity  : 1;
+        transform: scale(1) translateY(-10px);
+    }
 
-  70% {
-    opacity  : 1;
-    transform: scale(1) translateY(-14px);
-  }
+    70% {
+        opacity  : 1;
+        transform: scale(1) translateY(-14px);
+    }
 
-  90% {
-    opacity  : 0.1;
-    transform: scale(1) translateY(-10px);
-  }
+    90% {
+        opacity  : 0.1;
+        transform: scale(1) translateY(-10px);
+    }
 
-  94% {
-    opacity  : 0;
-    transform: scale(1) translateY(-10px);
-  }
+    94% {
+        opacity  : 0;
+        transform: scale(1) translateY(-10px);
+    }
 
-  100% {
-    opacity  : 0;
-    transform: translateY(0);
-  }
+    100% {
+        opacity  : 0;
+        transform: translateY(0);
+    }
 }
+
 // 提示向下
 @mixin tip-down-down {
-  animation: tip-down-down 2s linear infinite;
+    animation: tip-down-down 2s linear infinite;
 
 }
+
 @keyframes tip-down-down {
-  0% {
-    opacity  : 0;
-    transform: translateY(0);
-  }
+    0% {
+        opacity  : 0;
+        transform: translateY(0);
+    }
 
-  10% {
-    opacity  : 0.5;
-    transform: translateY(4px);
-  }
+    10% {
+        opacity  : 0.5;
+        transform: translateY(4px);
+    }
 
-  40% {
-    opacity  : 1;
-    transform: scale(1) translateY(10px);
-  }
+    40% {
+        opacity  : 1;
+        transform: scale(1) translateY(10px);
+    }
 
-  70% {
-    opacity  : 1;
-    transform: scale(1) translateY(14px);
-  }
+    70% {
+        opacity  : 1;
+        transform: scale(1) translateY(14px);
+    }
 
-  90% {
-    opacity  : 0.1;
-    transform: scale(1) translateY(10px);
-  }
+    90% {
+        opacity  : 0.1;
+        transform: scale(1) translateY(10px);
+    }
 
-  94% {
-    opacity  : 0;
-    transform: scale(1) translateY(10px);
-  }
+    94% {
+        opacity  : 0;
+        transform: scale(1) translateY(10px);
+    }
 
-  100% {
-    opacity  : 0;
-    transform: translateY(0);
-  }
+    100% {
+        opacity  : 0;
+        transform: translateY(0);
+    }
 }
 
 // 抖一抖引起注意
 @mixin shake-attention {
-  animation-name: shake-attention;
-  animation-duration: 0.06s;
-  animation-iteration-count: 10;
+    animation-name           : shake-attention;
+    animation-duration       : 0.06s;
+    animation-iteration-count: 10;
 }
 
 @keyframes shake-attention {
-  0% { transform: translateX(4%); }
-  100% { transform: translateX(-4%); }
+    0% {
+        transform: translateX(4%);
+    }
+
+    100% {
+        transform: translateX(-4%);
+    }
 }
 
 
+// 消失
 
+@mixin scale-out-center {
+    animation: scale-out-center .3s cubic-bezier(.55, .085, .68, .53) both
+}
 
+@keyframes scale-out-center {
+    0% {
+        transform: scale(1);
+        opacity  : 1
+    }
+
+    100% {
+        transform: scale(0);
+        opacity  : 1
+    }
+}

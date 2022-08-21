@@ -6,28 +6,32 @@ export default defineStore('workPlaceRefs', {
     left: null,
     right: null,
     drawWrapper: null,
-    shadowComponent: null,
+    // shadowComponent: null,
+    draggingDiv: null,
   }),
   actions: {
     addDrawWrapper(ref) {
       this.drawWrapper = ref
     },
-    addShadowComponent(ref) {
-      this.shadowComponent = ref
+    // addShadowComponent(ref) {
+    //   this.shadowComponent = ref
+    // },
+    addDraggingDiv(ele) {
+      this.draggingDiv = ele
     },
     addLeft(ref) {
       this.left = ref
-      // 页面滚动时，就会更新容器的高度，确保效果和 fix 一样
-      window.addEventListener('scroll', _ => {
-        ref.style.top = window.scrollY + 'px'
-      })
+      // // 页面滚动时，就会更新容器的高度，确保效果和 fix 一样
+      // window.addEventListener('scroll', _ => {
+      //   ref.style.top = window.scrollY + 'px'
+      // })
     },
     addRight(ref) {
       this.right = ref
-      // 页面滚动时，就会更新容器的高度，确保效果和 fix 一样
-      window.addEventListener('scroll', _ => {
-        ref.style.top = window.scrollY + 'px'
-      })
+      // // 页面滚动时，就会更新容器的高度，确保效果和 fix 一样
+      // window.addEventListener('scroll', _ => {
+      //   ref.style.top = window.scrollY + 'px'
+      // })
     },
   },
 })

@@ -9,7 +9,7 @@ const routes = [
   {
     // 工作区, 用于创建页面
     path: '/work-place',
-    component: () => import(/* webpackChunkName: "work-place" */ '../views/work-place.vue'),
+    component: () => import(/* webpackChunkName: "work-place" */ '../views/work-place/index.vue'),
   },
   {
     // 发布页面

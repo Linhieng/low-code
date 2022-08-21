@@ -33,60 +33,45 @@ export default defineStore('dragTempStyle', {
         topTmp: 0,
         leftTmp: 0,
         limitLeft: 0,
+
+        dragging: false,
+        dragDiv: null,
     }),
     actions: {
-        drawDragStart(id, x, y) {
-            const drawWrapper = useWorkPlaceRefs().drawWrapper
-            const drawData = useDrawData()
-
-            this.id = id
-            this.width = drawData.elementConfig[id].style.width
-            this.height = drawData.elementConfig[id].style.height
-
-            const { top: drawTop, left: drawLeft, width: drawWidth, height: drawHeight } = window.getComputedStyle(drawWrapper)
-            this.drawTop = drawTop
-            this.drawLeft = drawLeft
-            this.drawWidth = drawWidth
-            this.drawHeight = Number.parseFloat(drawHeight)
-
-            this.offsetX = x + 'px'
-            this.offsetY = y + 'px'
-
-            this.topTmp = Number.parseFloat(drawTop) + y
-            this.leftTmp = Number.parseFloat(drawLeft) + x
-            this.limitLeft = Number.parseFloat(drawWidth) - Number.parseFloat(this.width)
-        },
-        dragStart(elementType, componentElement, x, y) {
-            const drawWrapper = useWorkPlaceRefs().drawWrapper
-
-            this.id = -1
+        dragStart(elementType, event) {
+            this.dragging = true
             this.type = elementType
 
             const { width, height } = ELEMENT_LAYOUT[elementType]
-            this.width = width
-            this.height = height
+            const drawWrapper = useWorkPlaceRefs()
+            const div = document.createElement('div')
 
-            //画布的属性
-            const { top: drawTop, left: drawLeft, width: drawWidth, height: drawHeight } = window.getComputedStyle(drawWrapper)
-            this.drawTop = drawTop
-            this.drawLeft = drawLeft
-            this.drawWidth = drawWidth
-            this.drawHeight = Number.parseFloat(drawHeight)
+            drawWrapper.drawWrapper.appendChild(div)
+            drawWrapper.addDraggingDiv(div)
 
-            //按钮的属性
-            const { width: btnWidth, height: btnHeight } = window.getComputedStyle(componentElement)
-            this.btnWidth = btnWidth
-            this.btnHeight = btnHeight
+            this.dragDiv = div
 
-            this.offsetX = x + 'px'
-            this.offsetY = y + 'px'
+            div.classList.add('dragging-box')
+            div.style.width = width
+            div.style.height = height
+            div.style.top = event.pageY + 'px'
+            div.style.left = event.pageX + 'px'
 
-            //为了后面计算影子离画布顶部的距离
-            this.topTmp = Number.parseFloat(drawTop) + y + (Number.parseFloat(height) - Number.parseFloat(btnHeight)) / 2
+        },
 
-            //为了后面计算影子离画布左侧的距离
-            this.leftTmp = Number.parseFloat(drawLeft) + x + (Number.parseFloat(width) - Number.parseFloat(btnWidth)) / 2
-            this.limitLeft = Number.parseFloat(drawWidth) - Number.parseFloat(width)
+        drop() {
+            this.dragging = false
+
+            const { width, height } = ELEMENT_LAYOUT[this.type]
+            const drawData = useDrawData()
+            const drawStyle = useWorkPlaceRefs().drawWrapper.getBoundingClientRect()
+            const div = this.dragDiv
+
+            const top = Number.parseFloat(div.style.top)  - Number.parseFloat(height) / 2 - drawStyle.top + 'px'
+            const left = Number.parseFloat(div.style.left)  - Number.parseFloat(width) / 2 - drawStyle.left + 'px'
+            drawData.add(this.type, top, left)
+
+            div.parentElement.removeChild(div)
         },
         updateDrawHeight(height) {
             this.drawHeight = height

@@ -27,6 +27,7 @@ export default defineStore('drawData', {
       }
     },
     dragUpdate(id, top, left) {
+      console.log('debugger: ', id, this.elementConfig[id])
       this.elementConfig[id].style.top = top
       this.elementConfig[id].style.left = left
     },

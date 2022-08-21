@@ -36,7 +36,7 @@ export default {
   },
   methods: {
     modify() {
-      this.configOptions.open(this.id)
+      // this.configOptions.open(this.id)
     },
   },
 }
