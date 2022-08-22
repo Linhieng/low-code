@@ -93,9 +93,7 @@ export default {
 h2 {
   user-select: none;
   margin-left: 12px;
-  &:active {
-    cursor: move;
-  }
+  cursor: move;
 }
 .btn-wrapper {
   height: 500px;

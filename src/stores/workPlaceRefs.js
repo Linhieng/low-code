@@ -3,6 +3,7 @@ import { defineStore } from 'pinia'
 
 export default defineStore('workPlaceRefs', {
   state: () => ({
+    main: null,
     left: null,
     right: null,
     drawWrapper: null,
@@ -10,6 +11,9 @@ export default defineStore('workPlaceRefs', {
     draggingDiv: null,
   }),
   actions: {
+    addMain(ref) {
+      this.main = ref
+    },
     addDrawWrapper(ref) {
       this.drawWrapper = ref
     },

@@ -16,16 +16,6 @@ const routes = [
     path: '/page/:id',
     component: () => import(/* webpackChunkName: "page" */ '../views/page.vue'),
   },
-  /* ========= tmp start ========== */
-  {
-    path: '/test-upload',
-    component: () => import(/* webpackChunkName: "test-upload" */ '../tmp/test-upload.vue'),
-  },
-  {
-    path: '/test-pinia',
-    component: () => import(/* webpackChunkName: "test-pinia" */ '../tmp/test-pinia.vue'),
-  },
-  /* ========= tmp end========== */
   {
     path: '/:pathMatch(.*)*',
     component: No,

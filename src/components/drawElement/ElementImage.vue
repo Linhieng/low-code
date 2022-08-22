@@ -1,9 +1,9 @@
 <template>
   <div v-if="configOptions.id === id" @click="modify" class="ele-item ele-active" :style="styleTemp">
-    <img :src="configTemp.src" :alt="configTemp.alt" :style="{ objectFit: styleTemp.objectFit, objectPosition: styleTemp.objectPosition }" />
+    <img draggable="false" :src="configTemp.src" :alt="configTemp.alt" :style="{ objectFit: styleTemp.objectFit, objectPosition: styleTemp.objectPosition }" />
   </div>
   <div v-else @click="modify" class="ele-item" :style="style">
-    <img :src="config.src" :alt="config.alt" :style="{ objectFit: style.objectFit, objectPosition: style.objectPosition }" />
+    <img draggable="false" :src="config.src" :alt="config.alt" :style="{ objectFit: style.objectFit, objectPosition: style.objectPosition }" />
   </div>
 </template>
 

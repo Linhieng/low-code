@@ -105,15 +105,15 @@ main {
     right    : 10px;
 
     width     : 400px;
-    height    : 500px;
+    height    : 800px;
     padding   : 0 20px;
 
     box-sizing      : border-box;
-    border-left     : 1px solid #f0f0f0;
+    box-shadow: 0 0 10px 0 #ddd;
     background-color: #FFF;
-    @include show-right;
+    @include show;
 }
 
 #work-place.dragging main #left{
-    @include scale-out-center;
+    @include hidden;
 }

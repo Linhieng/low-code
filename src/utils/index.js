@@ -22,6 +22,7 @@ export function rgb2Hex(rgb) {
   return '#' + numTo16(rgb[0]) + numTo16(rgb[1]) + numTo16(rgb[2])
 }
 
+// 判断 B 元素是否是 A 元素的 “父系”
 export function isAinB(A, B) {
   // parentElement 是有 “尽头” 的, 所以直接判断 A
   while (!!A) {

@@ -3,7 +3,7 @@
     <header>
       <Top />
     </header>
-    <main>
+    <main ref="main">
       <Left />
       <Draw />
       <Right />
@@ -17,14 +17,18 @@ import Draw from './Draw.vue'
 import Right from './Right.vue'
 import Top from './Top.vue'
 import "./index.scss"
-import { useDragTempStyleStore  } from "@/stores/index"
+import { useDragTempStyleStore, useWorkPlaceRefs  } from "@/stores/index"
 
 export default {
   components: { Left, Draw, Right, Top },
   data() {
     return {
-      dragStyle: useDragTempStyleStore()
+      dragStyle: useDragTempStyleStore(),
+      workPlaceRefs: useWorkPlaceRefs(),
     }
+  },
+  mounted() {
+    this.workPlaceRefs.addMain(this.$refs.main)
   }
 }
 </script>

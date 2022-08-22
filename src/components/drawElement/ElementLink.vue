@@ -1,9 +1,9 @@
 <template>
   <div v-if="configOptions.id === id" @click="modify" class="ele-item ele-active" :style="styleTemp">
-    <a  @click="e => e.preventDefault()" :href="configTemp.href">{{ configTemp.innerText }}</a>
+    <a draggable="false" @click="e => e.preventDefault()" :href="configTemp.href">{{ configTemp.innerText }}</a>
   </div>
   <div v-else @click="modify" class="ele-item" :style="style">
-    <a  @click="e => e.preventDefault()" :href="config.href">{{ config.innerText }}</a>
+    <a draggable="false" @click="e => e.preventDefault()" :href="config.href">{{ config.innerText }}</a>
   </div>
 </template>
 
@@ -51,6 +51,7 @@ a {
     line-height:inherit;
     background-color:inherit;
     text-decoration:inherit;
+    user-select: none;
 }
 
 </style>

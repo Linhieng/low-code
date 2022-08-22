@@ -2,7 +2,7 @@
   <div class="modify-config">
     <!-- 输入文本 -->
     <div v-if="configList.hasOwnProperty('innerText')" class="modify-item">
-      <div class="property">innerText（按钮文字）</div>
+      <div class="property">innerText（文本内容）</div>
       <div class="value-input">
         <TextArea :modelValue="configList.innerText" @update:modelValue="modify('innerText', $event)" />
       </div>
@@ -38,6 +38,7 @@
       </div>
     </div>
 
+    <!--  -->
     <div v-if="configList.hasOwnProperty('videoSrc')" class="modify-item">
       <div class="property">
         <span>上传视频</span>
@@ -122,6 +123,7 @@ export default {
     margin-bottom: 16px;
     display: flex;
     align-items: center;
+    justify-content: space-between;
 
     .preview-box {
       width: 40px;
@@ -137,6 +139,7 @@ export default {
         border-radius: 1px;
         transition: 0.3s;
         position: absolute;
+        transform-origin: right;
         &:hover {
           transform: scale(8);
           z-index: 5;

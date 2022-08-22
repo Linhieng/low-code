@@ -1,41 +1,16 @@
 // 从右侧出现
-@mixin show-right {
-    animation-name    : show-right;
+@mixin show {
+    animation-name    : show;
     animation-duration: .3s;
 }
 
 @keyframes show-right {
     0% {
-        transform: translateX(300%);
-    }
-
-    80% {
-        transform: translateX(-10%);
+        opacity: 0;
     }
 
     100% {
-        transform: translateX(0%);
-    }
-}
-
-// 从右侧隐藏
-@mixin hidden-right {
-    animation-name     : hidden-right;
-    animation-duration : .3s;
-    animation-fill-mode: forwards;
-}
-
-@keyframes hidden-right {
-    0% {
-        transform: translateX(0%);
-    }
-
-    30% {
-        transform: translateX(-20%);
-    }
-
-    100% {
-        transform: translateX(300%);
+        opacity: 1;
     }
 }
 
@@ -145,18 +120,16 @@
 
 // 消失
 
-@mixin scale-out-center {
-    animation: scale-out-center .3s cubic-bezier(.55, .085, .68, .53) both
+@mixin hidden {
+    animation: hidden .3s cubic-bezier(.55, .085, .68, .53) both
 }
 
-@keyframes scale-out-center {
+@keyframes hidden {
     0% {
-        transform: scale(1);
         opacity  : 1
     }
 
     100% {
-        transform: scale(0);
-        opacity  : 1
+        opacity  : 0
     }
 }

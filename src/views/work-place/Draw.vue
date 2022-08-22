@@ -1,7 +1,5 @@
 <template>
-  <!-- TODO: 高度自适应部分，有时候会卡顿, 可能是高度自适应的 “方法” 不对 -->
-  <div id="draw" ref="drawWrapper" @drop="drop($event)" @dragover="dragover" @dragenter="dragenter" @dragleave="dragleave">
-    <!-- NOTE: id 是数字类型, 如果后面改了, 记得修改子组件中 props 中的验证 -->
+  <div id="draw" ref="drawWrapper">
     <component v-for="ele in drawData.elementArr" :id="ele.id" :key="ele.id" :is="ele.type" @mousedown="mousedown($event, ele.id)" @dblclick="modifyConfig(ele.id)" ></component>
   </div>
 </template>
@@ -25,7 +23,8 @@ export default {
       workPlaceRefs: useWorkPlaceRefs(),
       configOptions: useConfigOptionsTemp(),
 
-      scrollTime: null,
+      scrollTimer: null,
+      scrollSpeed: 10,
 
       isMouseDown: false,
       dragElement: null,
@@ -37,6 +36,7 @@ export default {
   methods: {
     mousedown(e, id) {
       // TODO: if (正在编辑) return
+      if (this.configOptions.show) return
       this.dragElement = e.currentTarget
       this.dragId = id
       this.isMouseDown = true
@@ -45,102 +45,43 @@ export default {
     modifyConfig(id) {
       this.configOptions.open(id)
     },
-    // getTop(pageY) {
-    //   let Y = pageY - this.dragStyle.topTmp
-    //   if (Y < 0) Y = 0
-    //   return Y + 'px'
-    // },
-    // getLeft(pageX) {
-    //   let X = pageX - this.dragStyle.leftTmp
-    //   if (X < 0) X = 0
-    //   if (X >= this.dragStyle.limitLeft) X = this.dragStyle.limitLeft
-    //   return X + 'px'
-    // },
-    // checkDrawTop(pageY) {
-    //   if (!this.drawConfig.autoHeight) return
-
-    //   // NOTE: 此处 shadowTop 就算为负数也不影响
-    //   const shadowTop = pageY - this.dragStyle.topTmp
-    //   const shadowHeight = Number.parseFloat(this.dragStyle.height)
-    //   const drawTop = Number.parseFloat(this.dragStyle.drawTop)
-    //   const drawHeight = this.dragStyle.drawHeight
-    //   //影子离画布底部的距离
-    //   const drawBottom = drawHeight - shadowTop - shadowHeight
-    //   const pageTop = shadowTop - window.scrollY
-    //   //影子离页面底部的距离
-    //   const pageBottom = window.innerHeight - drawTop - pageTop - shadowHeight
-
-    //   if (pageBottom <= 200) {
-    //     this.$refs.downBox.style.display = 'block'
-    //     this.$refs.upBox.style.display = 'none'
-    //   } else if (pageTop <= 200) {
-    //     this.$refs.upBox.style.display = 'block'
-    //     this.$refs.downBox.style.display = 'none'
-    //   } else {
-    //     this.$refs.upBox.style.display = 'none'
-    //     this.$refs.downBox.style.display = 'none'
-    //   }
-
-    //   if (pageBottom <= 100) {
-    //     if (drawBottom <= 100) {
-    //       this.$refs.drawWrapper.style.height = drawHeight + 100 + 'px'
-    //       this.dragStyle.updateDrawHeight(drawHeight + 100)
-    //     }
-    //     window.scrollTo(0, window.scrollY + 10)
-    //   } else if (pageTop <= 100) {
-    //     window.scrollTo(0, window.scrollY - 10)
-    //   }
-    // },
-    // dragstart(e, id) {
-    //   console.log('hook: 点击拖拽(画布组件)', id)
-    //   // this.dragStyle.drawDragStart(id, e.offsetX, e.offsetY)
-    // },
-    // dragenter(e) {
-    //   console.log('hook: 进入')
-    //   if (this.dragStyle.id !== -1) return
-    //   const shadowComponent = this.$refs.shadowComponent
-    //   shadowComponent.style.opacity = 1
-    //   shadowComponent.style.zIndex = 99
-    //   shadowComponent.style.width = this.dragStyle.width
-    //   shadowComponent.style.height = this.dragStyle.height
-    //   shadowComponent.style.top = this.getTop(e.pageY)
-    //   shadowComponent.style.left = this.getLeft(e.pageX)
-    // },
-    // dragover(e) {
-    //   e.preventDefault()
-    //   if (this.dragStyle.id === -1) {
-    //     this.$refs.shadowComponent.style.top = this.getTop(e.pageY)
-    //     this.$refs.shadowComponent.style.left = this.getLeft(e.pageX)
-    //     this.checkDrawTop(e.pageY)
-    //   } else {
-    //     this.drawData.dragUpdate(this.dragStyle.id, this.getTop(e.pageY), this.getLeft(e.pageX))
-    //     this.checkDrawTop(e.pageY)
-    //   }
-    // },
-    // dragleave(e) {
-    //   console.log('hook: 离开', e.target.id)
-    //   // NOTE: 该判断条件用于判断鼠标是否离开画布区域。此处不保证无 bug
-    //   if (e.target.id === 'shadow-component')  {
-    //     this.$refs.upBox.style.display = 'none'
-    //     this.$refs.downBox.style.display = 'none'
-    //     this.$refs.shadowComponent.removeAttribute('style')
-    //   }
-    // },
-    // drop(e) {
-    //   console.log('hook: 放下')
-    //   // this.$refs.shadowComponent.removeAttribute('style')
-    //   // this.$refs.upBox.style.display = 'none'
-    //   // this.$refs.downBox.style.display = 'none'
-    //   // if (this.dragStyle.id === -1) {
-    //   //   this.drawData.add(this.dragStyle.type, this.getTop(e.pageY), this.getLeft(e.pageX))
-    //   // } else {
-    //   //   this.drawData.dragUpdate(this.dragStyle.id, this.getTop(e.pageY), this.getLeft(e.pageX))
-    //   // }
-    // },
+    clearScroll(){
+      clearInterval(this.scrollTimer)
+      this.scrollTimer = null
+    },
+    scroll() {
+      if (this.scrollTimer) return
+      this.scrollTimer = setInterval(() => {
+        const main = this.workPlaceRefs.main
+        const drawWrapper = this.$refs.drawWrapper
+        // 通过 speed 的正负判断是上滑还是下滑
+        if (this.speed < 0 && main.scrollTop + this.speed <= 0) {
+          main.scrollBy(0, 0)
+          this.clearScroll()
+          return
+        }
+        if (this.speed > 0 && main.scrollHeight - main.scrollTop - this.speed - main.clientHeight < 100) {
+          drawWrapper.style.height = Number.parseFloat(getComputedStyle(drawWrapper).height) + 100 + 'px'
+        }
+        main.scrollBy(0, this.speed)
+        this.dragY += this.speed
+        this.dragElement.style.transform = `translate(${this.dragX}px, ${this.dragY}px)`
+      }, 10)
+    },
+    checkWheel(e) {
+      if (e.y < 200) { // 上滑
+        this.speed = -4
+        this.scroll()
+      } else if(window.innerHeight - e.y < 200) { // 下滑
+        this.speed = 4
+        this.scroll()
+      } else {
+        this.clearScroll()
+      }
+    },
   },
   mounted() {
     this.workPlaceRefs.addDrawWrapper(this.$refs.drawWrapper)
-    // this.workPlaceRefs.addShadowComponent(this.$refs.shadowComponent)
 
     document.addEventListener('mouseup', () => {
       if (this.isMouseDown) {
@@ -159,9 +100,9 @@ export default {
         this.dragX += e.movementX / window.devicePixelRatio
         this.dragY += e.movementY / window.devicePixelRatio
         this.dragElement.style.transform = `translate(${this.dragX}px, ${this.dragY}px)`
+        if (this.drawConfig.autoHeight) this.checkWheel(e)
       }
     })
-
   },
 }
 </script>
