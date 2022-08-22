@@ -57,7 +57,7 @@ export default {
 
 <style lang="scss" scoped>
 #public-draw {
-  width     : 1180px;
+  width     : 1200px;
   height    : auto;
   min-height: 100vh;
   position  : absolute;

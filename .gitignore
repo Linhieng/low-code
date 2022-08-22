@@ -25,3 +25,4 @@ pnpm-debug.log*
 # 分割线 ===
 
 server/public
+server/log.log

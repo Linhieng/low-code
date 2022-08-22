@@ -18,6 +18,7 @@ main {
     width   : 100%;
     height: calc(100vh - 100px);
     overflow: auto;
+    transition: .3s;
 }
 
 #top {
@@ -142,6 +143,6 @@ main {
         @include hidden;
     }
     #draw {
-        border: none;
+        border-color: transparent;
     }
 }

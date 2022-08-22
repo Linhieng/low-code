@@ -17,17 +17,12 @@ export default defineStore('dragTempStyle', {
         drawTop: '',
         drawLeft: '',
         drawWidth: '',
-        drawHeight: 0, // 当高度不够时会自动增加, 该值不会直接使用, 所以不带单位
         // 鼠标距离 “组件按钮” 的边距
         offsetX: '',
         offsetY: '',
         // “组件按钮” 的宽高
         btnWidth: '',
         btnHeight: '',
-        // pageX: '', // 这个值经常变化, 不存入 stores 中
-        // pageY: '', // 这个值经常变化, 不存入 stores 中
-        // top: '', // 这个值经常变化, 不存入 stores 中
-        // left: '', // 这个值经常变化, 不存入 stores 中
 
         // 不带单位, 因为它不会单独使用, 而是会参与计算
         topTmp: 0,
@@ -72,9 +67,6 @@ export default defineStore('dragTempStyle', {
             drawData.add(this.type, top, left)
 
             div.parentElement.removeChild(div)
-        },
-        updateDrawHeight(height) {
-            this.drawHeight = height
         },
     },
 })

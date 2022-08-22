@@ -5,20 +5,21 @@
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="coral-icon coral-icon-arrow_left_line"><path d="M15.994 21a1 1 0 01-.708-.293L7.292 12.7a.999.999 0 01.001-1.413l7.994-7.994a.999.999 0 111.414 1.414l-7.287 7.287 7.288 7.299A1.001 1.001 0 0115.994 21" fill-rule="evenodd"></path></svg>
     </div>
     <div class="btn-wrapper">
-      <div class="btn-item" v-for="(elementType, i) in ELEMENT_TYPES" :key="i" :id="elementType.id" draggable="true" :data-type="elementType.value" @dragstart="dragstart($event, elementType.value)">{{ elementType.description }}</div>
+      <div class="btn-item" v-for="(elementType, i) in ELEMENT_TYPES" :key="i" :id="elementType.id" :data-type="elementType.value" @pointerdown="pointerdown(elementType.value)">{{ elementType.description }}</div>
     </div>
   </div>
 </template>
 
 <script>
 import { ELEMENT_TYPES } from '@/constants/index'
-import { useDragTempStyleStore, useWorkPlaceRefs } from '@/stores/index'
+import { useWorkPlaceRefs, useDragDataCache } from '@/stores/index'
 
 export default {
   data() {
     return {
-      dragStyle: useDragTempStyleStore(),
       workPlaceRefs: useWorkPlaceRefs(),
+      dragCache: useDragDataCache(),
+
       ELEMENT_TYPES,
       open: true,
       isDownLeft: false,
@@ -27,9 +28,9 @@ export default {
     }
   },
   methods: {
-    dragstart(e, elementType) {
-      console.log('hook: 点击拖拽')
-      this.dragStyle.dragStart(elementType, e)
+    pointerdown(type) {
+      console.log('hook: ', '点击')
+      this.dragCache.pointerdownLeft(type)
     },
   },
   mounted() {
@@ -40,19 +41,11 @@ export default {
         this.leftX += e.movementX / window.devicePixelRatio
         this.leftY += e.movementY / window.devicePixelRatio
         this.$refs.left.style.transform = `translate(${this.leftX}px, ${this.leftY}px)`
-      } else if (this.dragStyle.dragging) {
-        const div = this.workPlaceRefs.draggingDiv
-        div.style.top = e.pageY + 'px'
-        div.style.left = e.pageX + 'px'
       }
     })
 
-    document.addEventListener('mouseup', () => {
-      this.isDownLeft = false
-      if (this.dragStyle.dragging) {
-        this.dragStyle.drop()
-      }
-    })
+    document.addEventListener('mouseup', () => { this.isDownLeft = false })
+
   },
 }
 </script>
