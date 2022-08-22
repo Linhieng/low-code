@@ -1,6 +1,6 @@
 <template>
-  <div id="work-place" :class="{dragging: dragStyle.dragging}">
-    <header>
+  <div ref="workPlace" id="work-place" :class="{dragging: dragStyle.dragging}">
+    <header ref="header">
       <Top />
     </header>
     <main ref="main">
@@ -29,10 +29,8 @@ export default {
   },
   mounted() {
     this.workPlaceRefs.addMain(this.$refs.main)
+    this.workPlaceRefs.addHeader(this.$refs.header)
+    this.workPlaceRefs.addWorkPlace(this.$refs.workPlace)
   }
 }
 </script>
-
-<style lang="scss">
-
-</style>

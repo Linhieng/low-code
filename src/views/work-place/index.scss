@@ -8,8 +8,10 @@ $draw-width: 1200px;
 }
 
 header {
+    --switch-display:flex;
     width: 100%;
     height: $top-height;
+    transition: .3s;
 }
 
 main {
@@ -78,7 +80,7 @@ main {
     width : $draw-width;
     height: calc(100vh - 10px);
     margin: 0 auto;
-    overflow: hidden;
+    // overflow: hidden; 允许超出合理范围
 
     background  : #fff;
     border-left : 1px solid #ddd;
@@ -114,6 +116,32 @@ main {
     @include show;
 }
 
+/* ===分割线=== */
+
 #work-place.dragging main #left{
     @include hidden;
+}
+
+#work-place.preview-page {
+    header {
+        --switch-display:none;
+
+        width: 240px;
+        height: 100px;
+
+        position: fixed;
+        top: 0;
+        left: 0;
+
+        box-shadow: 0 0 10px 0 #ddd;
+    }
+    main {
+        height: 100vh;
+    }
+    #left {
+        @include hidden;
+    }
+    #draw {
+        border: none;
+    }
 }

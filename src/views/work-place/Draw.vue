@@ -35,8 +35,8 @@ export default {
   },
   methods: {
     mousedown(e, id) {
-      // TODO: if (正在编辑) return
       if (this.configOptions.show) return
+      if (this.drawConfig.isPreview) return
       this.dragElement = e.currentTarget
       this.dragId = id
       this.isMouseDown = true

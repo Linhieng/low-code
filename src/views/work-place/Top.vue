@@ -5,7 +5,9 @@
       <div class="switch-btn"><span class="thumb"></span></div>
       <label>开启高度自适应</label>
     </div>
-    <button class="btn-item btn-submit" @click="drawConfig.togglePreview">预览</button>
+    <button class="btn-item btn-submit" @click="drawConfig.togglePreview">
+      {{drawConfig.isPreview? '取消预览' : '预览'}}
+    </button>
     <button class="btn-item btn-submit" @click="publish">发布</button>
   </div>
 </template>
@@ -40,11 +42,13 @@ export default {
   height: 50px;
   padding: 0 10px;
 
-  display: flex;
+  display: var(--switch-display);
   align-items: center;
 
   border-radius: 4px;
   box-shadow: 0 0 4px 0px #ddd;
+
+  overflow: hidden;
   cursor: pointer;
 
   input {
