@@ -65,6 +65,7 @@ export default defineStore('dataCacheDragging', {
         /* ====== 分割线 ====== */
 
         pointermove(e) {
+            console.log('hook: ', '鼠标移动')
             if (this.down && !this.dragging) {
                 this.dragging = true
 
@@ -88,7 +89,6 @@ export default defineStore('dataCacheDragging', {
                 this.dragElement.style.zIndex = 9999
                 this.dragElement.style.position = 'fixed'
                 this.dragElement.style.boxShadow = '0 0 10px 0 #DDD'
-                console.log('debugger: ', this.transitionX,this.transitionY)
                 this.dragElement.style.transform = `translate(-${this.transitionX}px, -${this.transitionY}px)`
             }
 
@@ -97,6 +97,7 @@ export default defineStore('dataCacheDragging', {
             if (useDrawConfig().autoHeight) this.checkWheel(e)
         },
         pointerup() {
+            console.log('hook: ', '鼠标抬起')
             if (!this.dragging) {
                 this.down = false
                 this.clearScroll()
@@ -134,6 +135,7 @@ export default defineStore('dataCacheDragging', {
             document.removeEventListener('pointerup', this.pointerup)
         },
         pointerdown({ele = null, id = -1, type = ''}) {
+            console.log('hook: ', '鼠标按下')
             this.type = type
             this.id = id
             this.dragElement = ele

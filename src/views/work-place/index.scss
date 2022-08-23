@@ -12,6 +12,7 @@ header {
     width           : 100%;
     height          : $top-height;
     transition      : .3s;
+    z-index         : 1;
 }
 
 main {
@@ -19,6 +20,17 @@ main {
     height    : calc(100vh - 100px);
     overflow  : auto;
     transition: .3s;
+
+    &::-webkit-scrollbar {
+        width : 20px;
+        height: 14px;
+    }
+
+    &::-webkit-scrollbar-thumb {
+        background-color: transparent;
+        box-shadow      : inset 0 0 20px skyblue;
+        border: 6px solid transparent;
+    }
 }
 
 #top {

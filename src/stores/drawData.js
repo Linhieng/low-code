@@ -31,14 +31,15 @@ export default defineStore('drawData', {
       this.elementConfig[id].style.left = left
     },
     update(id, style, config) {
-      this.elementConfig[id].style = style
-      this.elementConfig[id].config = config
+      // dataCacheConfig 传递的是一个 proxy 对象, 直接赋值会导致 drawData 的数据和他进行绑定了
+      this.elementConfig[id].style = JSON.parse(JSON.stringify(style))
+      this.elementConfig[id].config = JSON.parse(JSON.stringify(config))
     },
     del(id) {
       delete this.elementConfig[id]
 
       const tmp = this.elementArr
-      tmp.splice(tmp.find(({ i }) => i === id), 1)
+      tmp.splice(tmp.findIndex(a => a.id === id), 1)
       this.elementArr = tmp
     },
     publish() {

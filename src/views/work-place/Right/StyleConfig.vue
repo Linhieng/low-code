@@ -1,90 +1,37 @@
 <template>
   <div class="modify-style">
-    <!-- range -->
 
-    <div v-if="styleList.width" class="modify-item">
-      <p class="property">width: {{ styleList.width }}</p>
-      <div class="key-option" :class="{ active: styleList.width === 'auto' }" @click="modify('width', 'auto')">auto</div>
-      <input @input="modify('width', $event.currentTarget.value + 'px')" class="value" type="range" :value="Number.parseFloat(styleList.width)" :min="styleLimit.width.min" :max="styleLimit.width.max" />
-    </div>
+    <template v-for="item in styleList.pureNum" :key="item.propName">
+       <div class="modify-item">
+        <p class="property">{{item.propName}}: {{ item.value }}</p>
+        <input @input="modify(item.propName, $event.currentTarget.value)" class="value" type="range" :value="item.value" :min="item.limit.min" :max="item.limit.max" />
+      </div>
+    </template>
 
-    <div v-if="styleList.height" class="modify-item">
-      <p class="property">height: {{ styleList.height }}</p>
-      <div class="key-option" :class="{ active: styleList.height === 'auto' }" @click="modify('height', 'auto')">auto</div>
-      <input @input="modify('height', $event.currentTarget.value + 'px')" class="value" type="range" :value="Number.parseFloat(styleList.height)" :min="styleLimit.height.min" :max="styleLimit.height.max" />
-    </div>
-
-    <!-- <div v-if="styleList.top" class="modify-item">
-      <p class="property">top: {{ styleList.top }}</p>
-      <input @input="modify('top', $event.currentTarget.value + 'px')" class="value" type="range" :value="Number.parseFloat(styleList.top)" :min="styleLimit.top.min" :max="styleLimit.top.max" />
-    </div>
-
-    <div v-if="styleList.left" class="modify-item">
-      <p class="property">left: {{ styleList.left }}</p>
-      <input @input="modify('left', $event.currentTarget.value + 'px')" class="value" type="range" :value="Number.parseFloat(styleList.left)" :min="styleLimit.left.min" :max="styleLimit.left.max" />
-    </div> -->
-
-    <div v-if="styleList.zIndex" class="modify-item">
-      <p class="property">zIndex: {{ styleList.zIndex }}</p>
-      <input @input="modify('zIndex', $event.currentTarget.value)" class="value" type="range" :value="styleList.zIndex" :min="styleLimit.zIndex.min" :max="styleLimit.zIndex.max" />
-    </div>
-
-    <div v-if="styleList.fontSize" class="modify-item">
-      <p class="property">font-size: {{ styleList.fontSize }}</p>
-      <input @input="modify('fontSize', $event.currentTarget.value + 'px')" class="value" type="range" :value="Number.parseFloat(styleList.fontSize)" :min="styleLimit.fontSize.min" :max="styleLimit.fontSize.max" />
-    </div>
-
-    <div v-if="styleList.lineHeight" class="modify-item">
-      <p class="property">line-height: {{ styleList.lineHeight }}</p>
-      <input @input="modify('lineHeight', $event.currentTarget.value + 'px')" class="value" type="range" :value="Number.parseFloat(styleList.lineHeight)" :min="styleLimit.lineHeight.min" :max="styleLimit.lineHeight.max" />
-    </div>
+    <template v-for="item in styleList.inputPx" :key="item.propName">
+       <div class="modify-item">
+        <p class="property">{{item.propName}}: {{ item.value }}</p>
+        <input @input="modify(item.propName, $event.currentTarget.value + 'px')" class="value" type="range" :value="Number.parseFloat(item.value)" :min="item.limit.min" :max="item.limit.max" />
+      </div>
+    </template>
 
     <!-- 选项 -->
-
-    <div v-if="styleList.textAlign" class="modify-item">
-      <p class="property">text-align: {{ styleList.textAlign }}</p>
-      <ul class="option-list">
-        <button class="btn-option" v-for="(option, i) in styleLimit.textAlign.enumOptions" :key="i" :class="{ active: styleList.textAlign === option }" @click="modify('textAlign', option)">{{ option }}</button>
-      </ul>
-    </div>
-
-    <div v-if="styleList.objectFit" class="modify-item">
-      <p class="property">object-fit: {{ styleList.objectFit }}</p>
-      <ul class="option-list">
-        <button class="btn-option" v-for="(option, i) in styleLimit.objectFit.enumOptions" :key="i" :class="{ active: styleList.objectFit === option }" @click="modify('objectFit', option)">{{ option }}</button>
-      </ul>
-    </div>
-
-    <div v-if="styleList.objectPosition" class="modify-item">
-      <p class="property">object-position: {{ styleList.objectPosition }}</p>
-      <ul class="option-list">
-        <button class="btn-option" v-for="(option, i) in styleLimit.objectPosition.enumOptions" :key="i" :class="{ active: styleList.objectPosition === option }" @click="modify('objectPosition', option)">{{ option }}</button>
-      </ul>
-    </div>
-
-    <!-- 新增的text-decoration -->
-
-    <div v-if="styleList.textDecoration" class="modify-item">
-      <p class="property">text-decoration: {{ styleList.textDecoration }}</p>
-      <ul class="option-list">
-        <button class="btn-option" v-for="(option, i) in styleLimit.textDecoration.enumOptions" :key="i" :class="{ active: styleList.textDecoration === option }" @click="modify('textDecoration', option)">{{ option }}</button>
-      </ul>
-    </div>
+    <template v-for="item in styleList.restricted" :key="item.value">
+      <div class="modify-item">
+        <p class="property">{{item.propName}}: {{ item.value }}</p>
+        <ul class="option-list"> <button class="btn-option" v-for="option in item.selection" :key="option" :class="{ active: item.value === option }" @click="modify(item.propName, option)">{{ option }}</button> </ul>
+      </div>
+    </template>
 
     <!-- 颜色 -->
+    <!-- NOTE: :key 值如果设置为 item.value, 会导致 bug。每当颜色变化时，item.value 的值都会变，从而导致 vue 重新渲染， 先前的组件 ColorPicker 就会被卸载。   -->
+    <template v-for="item in styleList.color" :key="item.propName">
+      <div class="modify-item">
+        <p class="property">{{item.propName}}: {{ item.value }}</p>
+        <div class="value"> <ColorPicker :modelValue="item.value" @update:modelValue="modify(item.propName, $event)" /> </div>
+      </div>
+    </template>
 
-    <div v-if="styleList.color" class="modify-item">
-      <p class="property">color: {{ styleList.color }}</p>
-      <div class="value">
-        <ColorPicker v-model="styleList.color" />
-      </div>
-    </div>
-    <div v-if="styleList.backgroundColor" class="modify-item">
-      <p class="property">background-color: {{ styleList.backgroundColor }}</p>
-      <div class="value">
-        <ColorPicker v-model="styleList.backgroundColor" />
-      </div>
-    </div>
   </div>
 </template>
 
@@ -96,41 +43,47 @@ export default {
   components: { ColorPicker },
   data() {
     return {
-      configOption: useDataCacheConfig(),
-      color: '#000',
+      cacheConfig: useDataCacheConfig(),
     }
   },
   computed: {
     styleList() {
-      return this.configOption.style
+      return this.cacheConfig.styleForModify
     },
-    styleLimit() {
-      return this.configOption.styleLimit
-    },
-    fontSizeMax(){
-      return this.configOption.styleLimit.fontSize.max
-    }
   },
-  // watch:{
-  //   styleList:{
-  //     handler(n,o){
-  //       this.styleLimit.lineHeight.max = Number.parseFloat(n.fontSize) + 2 * (Number.parseFloat(n.height) - Number.parseFloat(n.fontSize))
-  //        const fontPadding = (Number.parseFloat(n.lineHeight) - Number.parseFloat(n.fontSize)) / 2
-  //       const bottomDistance = Number.parseFloat(n.height) - fontPadding - Number.parseFloat(n.fontSize)
-  //       this.styleLimit.fontSize.max= fontPadding > bottomDistance ? (bottomDistance * 2 + Number.parseFloat(n.fontSize)) : (fontPadding * 2 + Number.parseFloat(n.fontSize))
-  //     },
-  //     deep:true
-  //   }
-  // },
   methods: {
     modify(property, value) {
-      this.configOption.modifyStyle(property, value)
+      this.cacheConfig.modifyStyle(property, value)
     },
   },
 }
 </script>
 
 <style lang="scss" scoped>
+
+input[type="range"] {
+  appearance: none;
+  width: 100px;
+  height: 10px;
+  border-radius: 5px;
+  background: #d7dcdf;
+
+  &::-webkit-slider-thumb {
+    appearance: none;
+    width: 15px;
+    height: 15px;
+    border-radius: 50%;
+    background: #2c3e50;
+    cursor: pointer;
+    &:hover {
+      background: skyblue;
+    }
+  }
+  &:active::-webkit-slider-thumb {
+    background: skyblue;
+  }
+}
+
 .modify-item {
   width: 100%;
   margin-top: 20px;

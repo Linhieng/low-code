@@ -1,62 +1,22 @@
 import { defineStore } from 'pinia'
 import { useDrawData } from '@/stores/index'
 
-// TODO: 对相关值进行限制，这里先简单处理一下。
-// limitFunction 对象的属性均为函数，并且该函数名与样式属性名对应，返回值也不是乱写的，他们和 @/components/work-place/Right/StyleConfig.vue 中的限制一一对应
-const limitFunction = {
-
-  // 数值的限制（因为使用滑轮，所以需要限制，但感觉还能换种方式处理）
-  width(style) {
-    const width = Number.parseFloat(style.width)
-    return { min: width / 2, max: width * 2 }
-  },
-  height(style) {
-    const height = Number.parseFloat(style.height)
-    return { min: height / 2, max: height * 2 }
-  },
-  zIndex() {
-    return {
-      min: 2,
-      max: 999,
-    }
-  },
-  fontSize() {
-    return { min: 12, max: 40 }
-  },
-  lineHeight() {
-    return { min: 20, max: 100 }
-  },
-
-  // 选项的可选项（这个才是真正有用的）
-  textAlign() {
-    return {
-      enumOptions: ['left', 'center', 'right'],
-    }
-  },
-
-  textDecoration() {
-    return {
-      enumOptions: ['underline', 'overline', 'line-through', 'none'],
-    }
-  },
-
-  objectFit() {
-    return {
-      enumOptions: ['contain', 'cover', 'fill', 'none', 'scale-down'],
-    }
-  },
-  objectPosition() {
-    return {
-      enumOptions: ['top', 'bottom', 'center', 'left', 'right'],
-    }
-  },
-
-  // 不需要限制的样式，top left 是不在 “配置面板” 进行修改。 颜色是因为取色板不需要限制
-  top() { },
-  left() { },
-  color() { },
-  backgroundColor() { },
+// 修改颜色的样式
+const COLOR_SPECIES = ['color', 'backgroundColor']
+// 值是特定的样式, RESTRICTED_SELECTION 是对应的特定值
+const RESTRICTED_SPECIES = ['textAlign', 'objectFit', 'objectPosition', 'textDecoration',]
+const RESTRICTED_SELECTION = {
+  'textAlign': ['left', 'center', 'right'],
+  'objectFit': ['contain', 'cover', 'fill', 'none', 'scale-down'],
+  'objectPosition': ['top', 'bottom', 'center', 'left', 'right'],
+  'textDecoration': ['underline', 'overline', 'line-through', 'none'],
 }
+// 需要用户输入的样式, 是带单位 px 的。 这一部分的限制, 暂不单独适配
+const INPUT_PX_SPECIES = ['width', 'height', 'fontSize', 'lineHeight']
+// const INPUT_PX_LIMIT
+// 只允许输入数字的样式
+const PURE_NUM_SPECIES = ['zIndex']
+
 
 // 存储当前正在修改配置的可配置项
 export default defineStore('dataCacheConfig', {
@@ -66,9 +26,51 @@ export default defineStore('dataCacheConfig', {
     hasSave: true,
     config: {}, // 非样式可配置项
     style: {}, // 这些值都会带上单位
-    styleLimit: {}, // 限制输入范围
+    styleForModify: {}, // 专门为修改面板服务
   }),
   actions: {
+    // 同步 style 和 styleForModify
+    styleSyncStyleForModify() {
+      const style = this.style
+      let restricted = {}
+      let color = {}
+      let inputPx = {}
+      let pureNum = {}
+
+      // NOTE: 要求 style 中有的样式, 必须都有一个默认值
+      Object.keys(style).forEach(item => {
+        if (COLOR_SPECIES.includes(item)) {
+          color[item] = {
+            propName: item,
+            value: style[item],
+          }
+        } else if (INPUT_PX_SPECIES.includes(item)) {
+          const v = Number.parseInt(style[item])
+          inputPx[item] = {
+            propName: item,
+            value: style[item],
+            limit: { min: v, max: v * 10 }
+          }
+        } else if (PURE_NUM_SPECIES.includes(item)) {
+          const v = style[item]
+          pureNum[item] = {
+            propName: item,
+            value: v,
+            limit: { min: v, max: v * 100 }
+          }
+        } else if (RESTRICTED_SPECIES.includes(item)) {
+          restricted[item] = {
+            propName: item,
+            value: style[item],
+            selection: RESTRICTED_SELECTION[item]
+          }
+        } else {
+          item !== 'top' && item !== 'left' && console.warn('出现了未使用的样式', item)
+        }
+      })
+
+      this.styleForModify = { restricted, color, inputPx, pureNum }
+    },
     open(id) {
       if (this.id === id) return
 
@@ -76,14 +78,13 @@ export default defineStore('dataCacheConfig', {
       this.show = true
       this.hasSave = true
 
-      const drawData = useDrawData()
       // NOTE: 此处进行值复制, 如果直接复制, 则用户的修改会立即保存, 这不是我们想要的
-      this.config = JSON.parse(JSON.stringify(drawData.elementConfig[id].config))
-      this.style = JSON.parse(JSON.stringify(drawData.elementConfig[id].style))
-      // 所有样式都要限制值范围（只在这里弄的话，一些数量级的限制被写死了）
-      Object.keys(this.style).forEach(property => {
-        this.styleLimit[property] = limitFunction[property](this.style)
-      })
+      const drawData = useDrawData()
+      const config = JSON.parse(JSON.stringify(drawData.elementConfig[id].config))
+      const style = JSON.parse(JSON.stringify(drawData.elementConfig[id].style))
+      this.style = style
+      this.config = config
+      this.styleSyncStyleForModify()
     },
     save() {
       if (this.hasSave) return
@@ -95,6 +96,7 @@ export default defineStore('dataCacheConfig', {
       const drawData = useDrawData()
       this.config = JSON.parse(JSON.stringify(drawData.elementConfig[this.id].config))
       this.style = JSON.parse(JSON.stringify(drawData.elementConfig[this.id].style))
+      this.styleSyncStyleForModify()
       this.hasSave = true
     },
     close() {
@@ -110,6 +112,11 @@ export default defineStore('dataCacheConfig', {
     },
     // 还是要求修改值时都要通过 action 修改, 这样可以监控变化, 后续还可以实现 "撤销操作"
     modifyStyle(property, value) {
+      this.styleForModify.restricted.hasOwnProperty(property) && (this.styleForModify.restricted[property].value = value)
+      this.styleForModify.color.hasOwnProperty(property) && (this.styleForModify.color[property].value = value)
+      this.styleForModify.inputPx.hasOwnProperty(property) && (this.styleForModify.inputPx[property].value = value)
+      this.styleForModify.pureNum.hasOwnProperty(property) && (this.styleForModify.pureNum[property].value = value)
+
       this.style[property] = value
       this.hasSave = false
     },

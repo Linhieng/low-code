@@ -1,8 +1,5 @@
 <template>
-  <div v-if="configOptions.id === id" @click="modify" class="ele-item ele-active" :style="styleTemp">
-    <a draggable="false" @click="e => e.preventDefault()" :href="configTemp.href">{{ configTemp.innerText }}</a>
-  </div>
-  <div v-else @click="modify" class="ele-item" :style="style">
+  <div :style="style" class="ele-item" :class="{'ele-active': cacheConfig.id === id}">
     <a draggable="false" @click="e => e.preventDefault()" :href="config.href">{{ config.innerText }}</a>
   </div>
 </template>
@@ -17,41 +14,30 @@ export default {
   data() {
     return {
       drawData: useDrawData(),
-      configOptions: useDataCacheConfig(),
+      cacheConfig: useDataCacheConfig(),
     }
   },
   computed: {
     style() {
-      return JSON.parse(JSON.stringify(this.drawData.elementConfig[this.id].style))
-    },
-    styleTemp() {
-      return JSON.parse(JSON.stringify(this.configOptions.style))
+      if (this.cacheConfig.id === this.id)  return JSON.parse(JSON.stringify(this.cacheConfig.style))
+      else return JSON.parse(JSON.stringify(this.drawData.elementConfig[this.id].style))
     },
     config() {
+      if (this.cacheConfig.id === this.id) return JSON.parse(JSON.stringify(this.cacheConfig.config))
       return JSON.parse(JSON.stringify(this.drawData.elementConfig[this.id].config))
-    },
-    configTemp() {
-      return JSON.parse(JSON.stringify(this.configOptions.config))
-    },
-  },
-  methods: {
-    modify() {
-      // this.configOptions.open(this.id)
     },
   },
 }
 </script>
 
-<style scoped>
-
+<style lang="scss" scoped>
 a {
-    font-size:inherit;
-    text-align:inherit;
-    color:inherit;
-    line-height:inherit;
-    background-color:inherit;
-    text-decoration:inherit;
-    user-select: none;
+  font-size:inherit;
+  text-align:inherit;
+  color:inherit;
+  line-height:inherit;
+  background-color:inherit;
+  text-decoration:inherit;
+  user-select: none;
 }
-
 </style>

@@ -79,6 +79,12 @@ button {
   line-height: inherit;
   background-color: transparent;
   cursor: pointer;
+  &:hover {
+    filter: brightness(1.1);
+  }
+  &:active {
+    filter: brightness(0.9);
+  }
 }
 
 video ,img {
@@ -86,12 +92,15 @@ video ,img {
   height: 100%;
 }
 a {
-    font-size:inherit;
-    text-align:inherit;
-    color:inherit;
-    line-height:inherit;
-    background-color:inherit;
-    text-decoration:inherit;
+  font-size:inherit;
+  text-align:inherit;
+  color:inherit;
+  line-height:inherit;
+  background-color:inherit;
+  text-decoration:inherit;
+  &:hover {
+    color: skyblue;
+  }
 }
 
 </style>

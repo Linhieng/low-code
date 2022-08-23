@@ -1,10 +1,7 @@
 <template>
-  <div v-if="configOptions.id === id" @click="modify" class="ele-item ele-active" :style="styleTemp">
-    <button :title="configTemp.title">{{ configTemp.innerText }}</button>
-  </div>
-  <div v-else @click="modify" class="ele-item" :style="style">
-    <button :title="config.title">{{ config.innerText }}</button>
-  </div>
+<div class="ele-item" :class="{'ele-active': cacheConfig.id === id}" :style="style">
+  <button :title="config.title">{{ config.innerText }}</button>
+</div>
 </template>
 
 <script>
@@ -17,26 +14,17 @@ export default {
   data() {
     return {
       drawData: useDrawData(),
-      configOptions: useDataCacheConfig(),
+      cacheConfig: useDataCacheConfig(),
     }
   },
   computed: {
     style() {
-      return JSON.parse(JSON.stringify(this.drawData.elementConfig[this.id].style))
-    },
-    styleTemp() {
-      return JSON.parse(JSON.stringify(this.configOptions.style))
+      if (this.cacheConfig.id === this.id)  return JSON.parse(JSON.stringify(this.cacheConfig.style))
+      else return JSON.parse(JSON.stringify(this.drawData.elementConfig[this.id].style))
     },
     config() {
+      if (this.cacheConfig.id === this.id) return JSON.parse(JSON.stringify(this.cacheConfig.config))
       return JSON.parse(JSON.stringify(this.drawData.elementConfig[this.id].config))
-    },
-    configTemp() {
-      return JSON.parse(JSON.stringify(this.configOptions.config))
-    },
-  },
-  methods: {
-    modify() {
-      // this.configOptions.open(this.id)
     },
   },
 }

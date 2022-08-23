@@ -29,16 +29,6 @@
       </div>
     </div>
 
-    <!-- 选项 -->
-    <div v-if="configList.hasOwnProperty('muted')" class="modify-item">
-      <div class="property">muted（静音）</div>
-      <div class="value-select">
-        <button class="btn-option" :class="{ active: configList.muted === true }" @click="modify('muted', true)">true</button>
-        <button class="btn-option" :class="{ active: configList.muted === false }" @click="modify('muted', false)">false</button>
-      </div>
-    </div>
-
-    <!--  -->
     <div v-if="configList.hasOwnProperty('videoSrc')" class="modify-item">
       <div class="property">
         <span>上传视频</span>
@@ -143,27 +133,10 @@ export default {
         &:hover {
           transform: scale(8);
           z-index: 5;
+          background-color: #fff;
         }
       }
     }
-    // .litter-preview {
-    //   width: 40px;
-    //   height: 40px;
-    //   object-fit: contain;
-    //   margin-left: 200px;
-
-    //   box-shadow: 0 0 5px 0 #aaa;
-    //   border-radius: 1px;
-    //   position: relative;
-    //   z-index: 2;
-
-    //   transform-origin: right;
-    //   transition: 0.3s;
-
-    //   &:hover {
-    //     transform: scale(8);
-    //   }
-    // }
   }
   .value-input {
     width: 100%;

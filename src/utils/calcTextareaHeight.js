@@ -68,6 +68,5 @@ export default function calcTextareaHeight(targetElement, minRows = 1, maxRows) 
   result.height = `${height}px`
   hiddenTextarea.parentNode?.removeChild(hiddenTextarea)
   hiddenTextarea = undefined
-  // console.log('debugger: ', height, singleRowHeight, parseInt(height / singleRowHeight))
   return { ...result, rows: parseInt(height / singleRowHeight) }
 }

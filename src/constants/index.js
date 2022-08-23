@@ -45,8 +45,8 @@ export const ELEMENT_TYPES = {
 // ELEMENT_LAYOUT 可用于查阅各个组件的默认宽高
 export const ELEMENT_LAYOUT = {
     [ELEMENT_TEXT]: {
-        width: '400px',
-        height: '100px',
+        width: '200px',
+        height: '40px',
     },
     [ELEMENT_BUTTON]: {
         width: '120px',
@@ -61,8 +61,8 @@ export const ELEMENT_LAYOUT = {
         height: '30px',
     },
     [ELEMENT_VIDEO]: {
-        width: '400px',
-        height: '300px',
+        width: '300px',
+        height: '140px',
     },
 }
 
@@ -73,19 +73,19 @@ const ELEMENT_STYLE_TOGETHER = { width: '', height: '', top: '', left: '', zInde
 export const ELEMENT_STYLE = {
   [ELEMENT_TEXT]: {
     ...ELEMENT_STYLE_TOGETHER,
-    fontSize: '16px',
+    fontSize: '14px',
     textAlign: 'center',
     color: '#666',
-    lineHeight: '40px',
+    lineHeight: '20px',
     backgroundColor: '#FFF',
   },
   [ELEMENT_BUTTON]: {
     ...ELEMENT_STYLE_TOGETHER,
-    fontSize: '16px',
+    fontSize: '14px',
     textAlign: 'center',
-    color: '#666',
-    lineHeight: '40px',
-    backgroundColor: '#FFF',
+    color: '#FFF',
+    lineHeight: '20px',
+    backgroundColor: '#8cd6f4',
   },
   [ELEMENT_IMAGE]: {
     ...ELEMENT_STYLE_TOGETHER,
@@ -94,10 +94,10 @@ export const ELEMENT_STYLE = {
   },
   [ELEMENT_LINK]: {
     ...ELEMENT_STYLE_TOGETHER,
-    fontSize: '16px',
+    fontSize: '14px',
     textAlign: 'center',
     color: '#666',
-    lineHeight: '30px',
+    lineHeight: '20px',
     backgroundColor: '#FFF',
     textDecoration:'underline',
   },
@@ -126,7 +126,5 @@ export const ELEMENT_CONFIG = {
   [ELEMENT_VIDEO]: {
     videoSrc: '',
     poster: 'https://pic.imgdb.cn/item/6304364a16f2c2beb15ef536.png',
-    // NOTE: muted 属性是无法通过 v-bind 设置的, 想要设置应该通过 DOM 进行操作
-    muted: true,
   },
 }

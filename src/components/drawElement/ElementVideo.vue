@@ -1,22 +1,9 @@
 <template>
-  <div v-if="configOptions.id === id" @click="modify" class="ele-item ele-active" :style="styleTemp">
-    <!-- 这里不自动播放 -->
-    <video :poster="configTemp.poster" :src="configTemp.videoSrc" muted>错误</video>
-    <!-- <video :poster="configTemp.poster">
-      <source :src="configTemp.videoSrc" />
-      无法播放视频，请手动点击
-      <a :href="configTemp.videoSrc">此链接</a>
-      进行观看
-    </video> -->
-  </div>
-  <div v-else @click="modify" class="ele-item" :style="style">
-    <video :poster="config.poster" :src="config.videoSrc" muted autoplay>错误</video>
-    <!-- <video :poster="config.poster">
+  <div :style="style" class="ele-item" :class="{'ele-active': cacheConfig.id === id}">
+    <video :poster="config.poster" :src="config.videoSrc" muted autoplay>
       <source :src="config.videoSrc" />
-      无法播放视频，请手动点击
-      <a :href="config.videoSrc">此链接</a>
-      进行观看
-    </video> -->
+      无法播放视频，请手动点击 <a :href="config.videoSrc">此链接</a> 进行观看
+    </video>
   </div>
 </template>
 
@@ -30,32 +17,23 @@ export default {
   data() {
     return {
       drawData: useDrawData(),
-      configOptions: useDataCacheConfig(),
+      cacheConfig: useDataCacheConfig(),
     }
   },
   computed: {
     style() {
-      return JSON.parse(JSON.stringify(this.drawData.elementConfig[this.id].style))
-    },
-    styleTemp() {
-      return JSON.parse(JSON.stringify(this.configOptions.style))
+      if (this.cacheConfig.id === this.id)  return JSON.parse(JSON.stringify(this.cacheConfig.style))
+      else return JSON.parse(JSON.stringify(this.drawData.elementConfig[this.id].style))
     },
     config() {
+      if (this.cacheConfig.id === this.id) return JSON.parse(JSON.stringify(this.cacheConfig.config))
       return JSON.parse(JSON.stringify(this.drawData.elementConfig[this.id].config))
-    },
-    configTemp() {
-      return JSON.parse(JSON.stringify(this.configOptions.config))
-    },
-  },
-  methods: {
-    modify() {
-      // this.configOptions.open(this.id)
     },
   },
 }
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 video {
   width: 100%;
   height: 100%;

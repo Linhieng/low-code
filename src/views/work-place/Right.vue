@@ -1,7 +1,7 @@
 <template>
-  <div ref="right" id="right" v-show="this.configOptions.show" >
+  <div ref="right" id="right" v-show="this.cacheConfig.show" >
     <div class="top">
-      <h2 @mousedown="mousedown">配置 {{ configOptions.id }}</h2>
+      <h2 @mousedown="mousedown">配置 {{ cacheConfig.id }}</h2>
       <button @click="del" class="options_del btn-attention">删除组件</button>
       <button @click="close" title="关闭" class="options_close">
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="coral-icon coral-icon-close_line"><path d="M13.414 12l6.293-6.293a.999.999 0 10-1.414-1.414L12 10.586 5.707 4.293a.997.997 0 00-1.414 0 .999.999 0 000 1.414L10.586 12l-6.293 6.293a.999.999 0 101.414 1.414L12 13.414l6.293 6.293a.997.997 0 001.414 0 .999.999 0 000-1.414L13.414 12z" fill-rule="evenodd"></path></svg>
@@ -19,7 +19,7 @@
     <div class="bottom-btn">
       <button class="save" @click="save" title="保存并修改">保存并修改</button>
       <button class="reset" @click="reset" title="全部重置">全部重置</button>
-      <p class="status">{{ !configOptions.hasSave ? '未保存' : '' }}</p>
+      <p class="status">{{ !cacheConfig.hasSave ? '未保存' : '' }}</p>
     </div>
   </div>
 </template>
@@ -38,7 +38,7 @@ export default {
   data() {
     return {
       workPlaceRefs: useWorkPlaceRefs(),
-      configOptions: useDataCacheConfig(),
+      cacheConfig: useDataCacheConfig(),
       STYLE_TYPE,
       CONTENT_TYPE,
       modifyType: STYLE_TYPE,
@@ -53,18 +53,18 @@ export default {
       this.isMousedown = true
     },
     del() {
-      this.configOptions.del()
+      this.cacheConfig.del()
       this.$msg('已删除', 'success')
     },
     close() {
-      this.configOptions.close()
+      this.cacheConfig.close()
     },
     save() {
-      this.configOptions.save()
+      this.cacheConfig.save()
       this.$msg('已保存', 'success')
     },
     reset() {
-      this.configOptions.reset()
+      this.cacheConfig.reset()
     },
   },
   mounted() {
