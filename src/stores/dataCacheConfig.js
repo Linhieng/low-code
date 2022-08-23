@@ -91,7 +91,7 @@ export default defineStore('dataCacheConfig', {
       this.hasSave = true
     },
     reset() {
-      if (hasSave) return
+      if (this.hasSave) return
       const drawData = useDrawData()
       this.config = JSON.parse(JSON.stringify(drawData.elementConfig[this.id].config))
       this.style = JSON.parse(JSON.stringify(drawData.elementConfig[this.id].style))

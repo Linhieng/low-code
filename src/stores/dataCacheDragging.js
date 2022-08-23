@@ -3,7 +3,7 @@ import { defineStore } from 'pinia'
 import { ELEMENT_LAYOUT } from '@/constants/index'
 import { useWorkPlaceRefs, useDrawData, useDrawConfig } from '@/stores/index'
 
-export default defineStore('dragDataCache', {
+export default defineStore('dataCacheDragging', {
     // 这些值都会带上单位
     state: () => ({
         down: false,
@@ -98,9 +98,10 @@ export default defineStore('dragDataCache', {
         },
         pointerup() {
             if (!this.dragging) {
+                this.down = false
                 this.clearScroll()
-                document.removeEventListener('pointermove', this.pointermove2)
-                document.removeEventListener('pointerup', this.pointerup2)
+                document.removeEventListener('pointermove', this.pointermove)
+                document.removeEventListener('pointerup', this.pointerup)
                 return
             }
             this.down = false
