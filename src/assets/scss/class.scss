@@ -68,11 +68,3 @@
         filter: brightness(0.9);
     }
 }
-
-// 拖拽的元素
-.dragging-box {
-    position  : fixed;
-    z-index   : 99;
-    box-shadow: 0 0 10px 0 #DDD;
-    transform : translate(-50%, -50%);
-}

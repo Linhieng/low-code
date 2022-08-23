@@ -29,7 +29,7 @@ export default {
   },
   methods: {
     pointerdown(type) {
-      this.cacheDragging.pointerdownLeft(type)
+      this.cacheDragging.pointerdown({type})
     },
   },
   mounted() {

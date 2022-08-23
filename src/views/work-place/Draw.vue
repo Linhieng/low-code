@@ -31,7 +31,7 @@ export default {
     mousedown(e, id) {
       if (this.configOptions.show) return
       if (this.drawConfig.isPreview) return
-      this.cacheDragging.pointerdownDraw(e.currentTarget, id)
+      this.cacheDragging.pointerdown({ele:e.currentTarget, id})
     },
   },
   mounted() {

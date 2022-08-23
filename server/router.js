@@ -1,7 +1,8 @@
 const KoaRouter = require('koa-router')
 const multer = require('@koa/multer')
-const path = require('path')
 const { FileUploaderServer } = require('easy-file-uploader-server')
+
+const path = require('path')
 const {addPage, getPage, getAllPages, log} = require('./util')
 
 const upload = multer()
