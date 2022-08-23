@@ -62,7 +62,7 @@ export const ELEMENT_LAYOUT = {
     },
     [ELEMENT_VIDEO]: {
         width: '400px',
-        height: '400px',
+        height: '300px',
     },
 }
 
@@ -89,7 +89,7 @@ export const ELEMENT_STYLE = {
   },
   [ELEMENT_IMAGE]: {
     ...ELEMENT_STYLE_TOGETHER,
-    objectFit: 'none',
+    objectFit: 'cover',
     objectPosition: 'center',
   },
   [ELEMENT_LINK]: {
@@ -109,23 +109,23 @@ export const ELEMENT_STYLE = {
 }
 export const ELEMENT_CONFIG = {
   [ELEMENT_TEXT]: {
-    innerText: '',
+    innerText: 'talk is cheap, show me the code.',
   },
   [ELEMENT_BUTTON]: {
     innerText: '按钮',
     title: '按钮描述',
   },
   [ELEMENT_IMAGE]: {
-    alt: '',
-    src: '',
+    alt: '图片',
+    src: 'https://pic.imgdb.cn/item/6304358116f2c2beb15e9a9b.jpg',
   },
   [ELEMENT_LINK]: {
-    innerText: '链接标题',
-    href: '',
+    innerText: 'github page',
+    href: 'https://linhieng.github.io/linhieng/',
   },
   [ELEMENT_VIDEO]: {
     videoSrc: '',
-    poster: '',
+    poster: 'https://pic.imgdb.cn/item/6304364a16f2c2beb15ef536.png',
     // NOTE: muted 属性是无法通过 v-bind 设置的, 想要设置应该通过 DOM 进行操作
     muted: true,
   },

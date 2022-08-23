@@ -137,6 +137,6 @@ h2 {
 
 #btn-video {
     width : 150px;
-    height: 150px;
+    height: 120px;
 }
 </style>

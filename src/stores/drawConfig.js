@@ -13,7 +13,6 @@ export default defineStore('drawConfig', {
     },
     togglePreview() {
       this.isPreview = !this.isPreview
-      useDataCacheConfig().close()
       const workPlace = useWorkPlaceRefs().workPlace
       this.isPreview
         ? workPlace.classList.add('preview-page')

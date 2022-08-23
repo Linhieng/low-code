@@ -12,7 +12,7 @@
         <a :href="drawData.elementConfig[ele.id].config.href">{{ drawData.elementConfig[ele.id].config.innerText }}</a>
       </div>
       <div class="component-item" v-if="ele.type === ELEMENT_VIDEO" :style="drawData.elementConfig[ele.id].style">
-        <video :poster="drawData.elementConfig[ele.id].config.poster" :src="drawData.elementConfig[ele.id].config.videoSrc" muted>错误</video>
+        <video :poster="drawData.elementConfig[ele.id].config.poster" :src="drawData.elementConfig[ele.id].config.videoSrc" muted controls>错误</video>
       </div>
     </template>
   </div>

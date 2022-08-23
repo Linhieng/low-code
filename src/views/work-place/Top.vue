@@ -5,22 +5,29 @@
       <div class="switch-btn"><span class="thumb"></span></div>
       <label>开启高度自适应</label>
     </div>
-    <button class="btn-item btn-submit" @click="drawConfig.togglePreview"> {{drawConfig.isPreview? '取消预览' : '预览'}} </button>
+    <button class="btn-item btn-submit" @click="preview"> {{drawConfig.isPreview? '取消预览' : '预览'}} </button>
     <button class="btn-item btn-submit" @click="publish">发布</button>
   </div>
 </template>
 
 <script>
-import { useDrawConfig, useDrawData } from '@/stores/index'
+import { useDataCacheConfig, useDrawConfig, useDrawData } from '@/stores/index'
 
 export default {
   data() {
     return {
       drawConfig: useDrawConfig(),
       drawData: useDrawData(),
+      cacheConfig: useDataCacheConfig(),
     }
   },
   methods: {
+    preview() {
+      if (this.cacheConfig.show) {
+        return
+      }
+      this.drawConfig.togglePreview()
+    },
     async publish() {
       try {
         const data = await this.drawData.publish()

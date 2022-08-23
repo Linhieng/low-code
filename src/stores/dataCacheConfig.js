@@ -86,10 +86,12 @@ export default defineStore('dataCacheConfig', {
       })
     },
     save() {
+      if (this.hasSave) return
       useDrawData().update(this.id, this.style, this.config)
       this.hasSave = true
     },
     reset() {
+      if (hasSave) return
       const drawData = useDrawData()
       this.config = JSON.parse(JSON.stringify(drawData.elementConfig[this.id].config))
       this.style = JSON.parse(JSON.stringify(drawData.elementConfig[this.id].style))
@@ -104,6 +106,7 @@ export default defineStore('dataCacheConfig', {
     },
     del() {
       useDrawData().del(this.id)
+      this.close()
     },
     // 还是要求修改值时都要通过 action 修改, 这样可以监控变化, 后续还可以实现 "撤销操作"
     modifyStyle(property, value) {
