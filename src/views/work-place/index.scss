@@ -8,23 +8,23 @@ $draw-width: 1200px;
 }
 
 header {
-    --switch-display:flex;
-    width: 100%;
-    height: $top-height;
-    transition: .3s;
+    --switch-display: flex;
+    width           : 100%;
+    height          : $top-height;
+    transition      : .3s;
 }
 
 main {
-    width   : 100%;
-    height: calc(100vh - 100px);
-    overflow: auto;
+    width     : 100%;
+    height    : calc(100vh - 100px);
+    overflow  : auto;
     transition: .3s;
 }
 
 #top {
-    width : 100%;
-    height: 100%;
-    box-sizing: border-box;
+    width        : 100%;
+    height       : 100%;
+    box-sizing   : border-box;
     border-bottom: 1px solid #ddd;
 
     display        : flex;
@@ -35,52 +35,25 @@ main {
 }
 
 #left {
-    width : 240px;
-    height: fit-content;
+    width  : 240px;
+    height : fit-content;
     padding: 8px;
 
     box-sizing      : border-box;
     border-right    : 1px solid #f0f0f0;
     background-color: #FFF;
 
-    position: fixed;
-    z-index : 3;
-    top     : calc($top-height + 10px);
-    left    : 10px;
-    box-shadow:  0 0 10px 0 #ddd;
-
-    // 这些 id 和 constants/index 中的 ELEMENT_TYPES 对应
-    #btn-text {
-        width : 150px;
-        height: 40px;
-    }
-
-    #btn-button {
-        width : 110px;
-        height: 35px;
-    }
-
-    #btn-image {
-        width : 80px;
-        height: 80px;
-    }
-
-    #btn-link {
-        width          : 120px;
-        height         : 30px;
-        text-decoration: underline;
-    }
-
-    #btn-video {
-        width : 150px;
-        height: 150px;
-    }
+    position  : fixed;
+    z-index   : 3;
+    top       : calc($top-height + 10px);
+    left      : 10px;
+    box-shadow: 0 0 10px 0 #ddd;
 }
 
 #draw {
-    width : $draw-width;
-    height: calc(100vh - 10px);
-    margin: 0 auto;
+    width      : $draw-width;
+    height     : calc(100vh - 10px);
+    margin     : 0 auto;
     // overflow: hidden; 允许超出合理范围
 
     background  : #fff;
@@ -88,60 +61,52 @@ main {
     border-right: 1px solid #ddd;
 
     position: relative;
-
-    #shadow-component {
-        // width     : 101%;
-        // height    : 101%;
-        position  : absolute;
-        z-index   : 0;
-        opacity   : 0;
-        top       : 0;
-        left      : 0;
-        box-shadow: 0 0 10px 0px #ddd;
-    }
 }
 
 #right {
     position: fixed;
     z-index : 3;
     top     : calc($top-height + 10px);
-    right    : 10px;
+    right   : 10px;
 
-    width     : 400px;
-    height    : 800px;
-    padding   : 0 20px;
+    width  : 400px;
+    height : 800px;
+    padding: 0 20px;
 
     box-sizing      : border-box;
-    box-shadow: 0 0 10px 0 #ddd;
+    box-shadow      : 0 0 10px 0 #ddd;
     background-color: #FFF;
     @include show;
 }
 
 /* ===分割线=== */
 
-#work-place.dragging main #left{
+#work-place.dragging main #left {
     @include hidden;
 }
 
 #work-place.preview-page {
     header {
-        --switch-display:none;
+        --switch-display: none;
 
-        width: 240px;
+        width : 240px;
         height: 100px;
 
         position: fixed;
-        top: 0;
-        left: 0;
+        top     : 0;
+        left    : 0;
 
         box-shadow: 0 0 10px 0 #ddd;
     }
+
     main {
         height: 100vh;
     }
+
     #left {
         @include hidden;
     }
+
     #draw {
         border-color: transparent;
     }

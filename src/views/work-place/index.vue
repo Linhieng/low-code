@@ -1,5 +1,5 @@
 <template>
-  <div ref="workPlace" id="work-place" :class="{dragging: dragStyle.dragging}">
+  <div ref="workPlace" id="work-place" :class="{dragging: cacheDragging.dragging}">
     <header ref="header">
       <Top />
     </header>
@@ -12,18 +12,18 @@
 </template>
 
 <script>
+import Top from './Top.vue'
 import Left from './Left.vue'
 import Draw from './Draw.vue'
 import Right from './Right.vue'
-import Top from './Top.vue'
 import "./index.scss"
-import { useDragTempStyleStore, useWorkPlaceRefs  } from "@/stores/index"
+import { useWorkPlaceRefs, useDataCacheDragging  } from "@/stores/index"
 
 export default {
-  components: { Left, Draw, Right, Top },
+  components: { Top, Left, Draw, Right },
   data() {
     return {
-      dragStyle: useDragTempStyleStore(),
+      cacheDragging: useDataCacheDragging(),
       workPlaceRefs: useWorkPlaceRefs(),
     }
   },

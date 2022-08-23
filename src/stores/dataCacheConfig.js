@@ -1,30 +1,18 @@
 import { defineStore } from 'pinia'
-import { useDrawData, useDragTempStyleStore } from '@/stores/index'
+import { useDrawData } from '@/stores/index'
 
 // TODO: 对相关值进行限制，这里先简单处理一下。
 // limitFunction 对象的属性均为函数，并且该函数名与样式属性名对应，返回值也不是乱写的，他们和 @/components/work-place/Right/StyleConfig.vue 中的限制一一对应
 const limitFunction = {
-    // 数值的限制
 
-  width(style, dragStyle) {
-    const widthMax = Number.parseFloat(dragStyle.drawWidth) - Number.parseFloat(style.left) - 1
-    return { min: 100, max: widthMax }
+  // 数值的限制（因为使用滑轮，所以需要限制，但感觉还能换种方式处理）
+  width(style) {
+    const width = Number.parseFloat(style.width)
+    return { min: width / 2, max: width * 2 }
   },
-  height(style, dragStyle) {
-    const heightMax = Number.parseFloat(dragStyle.drawHeight) - Number.parseFloat(style.top) - 1
-    return { min: 30, max: heightMax }
-  },
-  top(style) {
-    // const top = Number.parseFloat(style.top)
-    // const minTop = top - 500 <= 0 ? 0 : top - 500
-    // const maxTop = top + 500
-    // return { min: minTop, max: maxTop }
-  },
-  left(style) {
-    // const left = Number.parseFloat(style.left)
-    // const minLeft = left - 500 <= 0 ? 0 : left - 500
-    // const maxLeft = left + 500
-    // return { min: minLeft, max: maxLeft }
+  height(style) {
+    const height = Number.parseFloat(style.height)
+    return { min: height / 2, max: height * 2 }
   },
   zIndex() {
     return {
@@ -39,8 +27,7 @@ const limitFunction = {
     return { min: 20, max: 100 }
   },
 
-    // 选项的限制
-
+  // 选项的可选项（这个才是真正有用的）
   textAlign() {
     return {
       enumOptions: ['left', 'center', 'right'],
@@ -49,7 +36,7 @@ const limitFunction = {
 
   textDecoration() {
     return {
-      enumOptions: ['underline', 'overline', 'line-through','none'],
+      enumOptions: ['underline', 'overline', 'line-through', 'none'],
     }
   },
 
@@ -64,17 +51,18 @@ const limitFunction = {
     }
   },
 
-    // 颜色没什么需要限制的, 因为使用取色板, 但是该属性还是得存在
-
-    color() {},
-    backgroundColor() {},
+  // 不需要限制的样式，top left 是不在 “配置面板” 进行修改。 颜色是因为取色板不需要限制
+  top() { },
+  left() { },
+  color() { },
+  backgroundColor() { },
 }
 
 // 存储当前正在修改配置的可配置项
-export default defineStore('configOptionsTemp', {
+export default defineStore('dataCacheConfig', {
   state: () => ({
-    show: false,
     id: -1,
+    show: false,
     hasSave: true,
     config: {}, // 非样式可配置项
     style: {}, // 这些值都会带上单位
@@ -83,22 +71,22 @@ export default defineStore('configOptionsTemp', {
   actions: {
     open(id) {
       if (this.id === id) return
-      this.hasSave = true
-      this.show = true
+
       this.id = id
+      this.show = true
+      this.hasSave = true
+
       const drawData = useDrawData()
-      const dragStyle = useDragTempStyleStore()
       // NOTE: 此处进行值复制, 如果直接复制, 则用户的修改会立即保存, 这不是我们想要的
       this.config = JSON.parse(JSON.stringify(drawData.elementConfig[id].config))
       this.style = JSON.parse(JSON.stringify(drawData.elementConfig[id].style))
-      // 所有样式都要限制值范围
+      // 所有样式都要限制值范围（只在这里弄的话，一些数量级的限制被写死了）
       Object.keys(this.style).forEach(property => {
-        this.styleLimit[property] = limitFunction[property](this.style, dragStyle)
+        this.styleLimit[property] = limitFunction[property](this.style)
       })
     },
     save() {
-      const drawData = useDrawData()
-      drawData.update(this.id, this.style, this.config)
+      useDrawData().update(this.id, this.style, this.config)
       this.hasSave = true
     },
     reset() {
@@ -108,14 +96,16 @@ export default defineStore('configOptionsTemp', {
       this.hasSave = true
     },
     close() {
+      if (!this.hasSave && !window.confirm('关闭后未保存的数据会丢失，是否确定关闭？')) {
+        return
+      }
       this.show = false
       this.id = -1
     },
     del() {
-      const drawData = useDrawData()
-      drawData.del(this.id)
+      useDrawData().del(this.id)
     },
-    // 还是要求修改值时都要通过 action 修改, 这样可以监控变化
+    // 还是要求修改值时都要通过 action 修改, 这样可以监控变化, 后续还可以实现 "撤销操作"
     modifyStyle(property, value) {
       this.style[property] = value
       this.hasSave = false

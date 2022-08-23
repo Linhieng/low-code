@@ -12,13 +12,13 @@
 
 <script>
 import { ELEMENT_TYPES } from '@/constants/index'
-import { useWorkPlaceRefs, useDragDataCache } from '@/stores/index'
+import { useWorkPlaceRefs, useDataCacheDragging } from '@/stores/index'
 
 export default {
   data() {
     return {
       workPlaceRefs: useWorkPlaceRefs(),
-      dragCache: useDragDataCache(),
+      cacheDragging: useDataCacheDragging(),
 
       ELEMENT_TYPES,
       open: true,
@@ -29,8 +29,7 @@ export default {
   },
   methods: {
     pointerdown(type) {
-      console.log('hook: ', '点击')
-      this.dragCache.pointerdownLeft(type)
+      this.cacheDragging.pointerdownLeft(type)
     },
   },
   mounted() {
@@ -52,11 +51,13 @@ export default {
 
 <style lang="scss" scoped>
 
-#left.close .btn_toggle svg {
-  transform: rotate(-90deg);
-}
-#left.close .btn-wrapper{
-  height: 0;
+#left.close {
+  .btn_toggle svg {
+    transform: rotate(-90deg);
+  }
+  .btn-wrapper{
+    height: 0;
+  }
 }
 
 .btn_toggle {
@@ -94,23 +95,48 @@ h2 {
   transition: .3s;
 
   .btn-item {
-    // 宽高在 id.scss 中配置
-    margin: 20px auto;
     display: flex;
     justify-content: center;
     align-items: center;
 
+    margin: 20px auto;
     border: 1px solid #ccc;
     border-radius: 4px;
+
     color: #666;
     font-size: 14px;
     text-align: center;
 
     cursor: grab;
-    &:active {
-      cursor: grabbing;
-    }
+    &:active { cursor: grabbing; }
   }
 }
 
+/* === */
+
+#btn-text {
+    width : 150px;
+    height: 40px;
+}
+
+#btn-button {
+    width : 110px;
+    height: 35px;
+}
+
+#btn-image {
+    width : 80px;
+    height: 80px;
+}
+
+#btn-link {
+    width          : 120px;
+    height         : 30px;
+    text-decoration: underline;
+}
+
+#btn-video {
+    width : 150px;
+    height: 150px;
+}
 </style>

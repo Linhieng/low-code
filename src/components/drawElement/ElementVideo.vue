@@ -21,7 +21,7 @@
 </template>
 
 <script>
-import { useDrawData, useConfigOptionsTemp } from '@/stores/index'
+import { useDrawData, useDataCacheConfig } from '@/stores/index'
 
 export default {
   props: {
@@ -30,7 +30,7 @@ export default {
   data() {
     return {
       drawData: useDrawData(),
-      configOptions: useConfigOptionsTemp(),
+      configOptions: useDataCacheConfig(),
     }
   },
   computed: {

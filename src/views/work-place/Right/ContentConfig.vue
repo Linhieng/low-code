@@ -79,7 +79,7 @@
 </template>
 
 <script>
-import { useConfigOptionsTemp } from '@/stores/index'
+import { useDataCacheConfig } from '@/stores/index'
 import TextArea from '@/components/TextArea.vue'
 import UpdateFile from '@/components/UpdateFile.vue'
 
@@ -87,7 +87,7 @@ export default {
   components: { TextArea, UpdateFile },
   data() {
     return {
-      configOption: useConfigOptionsTemp(),
+      configOption: useDataCacheConfig(),
     }
   },
   computed: {

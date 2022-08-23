@@ -26,7 +26,7 @@
 </template>
 
 <script>
-import { useWorkPlaceRefs, useConfigOptionsTemp } from '@/stores/index'
+import { useWorkPlaceRefs, useDataCacheConfig } from '@/stores/index'
 import StyleConfig from './Right/StyleConfig.vue'
 import ContentConfig from './Right/ContentConfig.vue'
 
@@ -39,7 +39,7 @@ export default {
   data() {
     return {
       workPlaceRefs: useWorkPlaceRefs(),
-      configOptions: useConfigOptionsTemp(),
+      configOptions: useDataCacheConfig(),
       STYLE_TYPE,
       CONTENT_TYPE,
       modifyType: STYLE_TYPE,

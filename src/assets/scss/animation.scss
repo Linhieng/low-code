@@ -119,17 +119,16 @@
 
 
 // 消失
-
 @mixin hidden {
-    animation: hidden .3s cubic-bezier(.55, .085, .68, .53) both
+    animation: hidden .2s both;
 }
 
 @keyframes hidden {
     0% {
-        opacity  : 1
+        opacity: 1;
     }
 
     100% {
-        opacity  : 0
+        opacity: 0;
     }
 }

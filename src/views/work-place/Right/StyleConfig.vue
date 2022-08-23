@@ -89,14 +89,14 @@
 </template>
 
 <script>
-import { useConfigOptionsTemp } from '@/stores/index'
+import { useDataCacheConfig } from '@/stores/index'
 import ColorPicker from '@/components/ColorPicker.vue'
 
 export default {
   components: { ColorPicker },
   data() {
     return {
-      configOption: useConfigOptionsTemp(),
+      configOption: useDataCacheConfig(),
       color: '#000',
     }
   },

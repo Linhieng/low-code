@@ -1,6 +1,6 @@
 // 存储创建的组件内容
 import { defineStore } from 'pinia'
-import { useWorkPlaceRefs } from './index'
+import { useWorkPlaceRefs, useDataCacheConfig } from './index'
 
 export default defineStore('drawConfig', {
   state: () => ({
@@ -13,7 +13,7 @@ export default defineStore('drawConfig', {
     },
     togglePreview() {
       this.isPreview = !this.isPreview
-
+      useDataCacheConfig().close()
       const workPlace = useWorkPlaceRefs().workPlace
       this.isPreview
         ? workPlace.classList.add('preview-page')
