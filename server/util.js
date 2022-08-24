@@ -45,8 +45,16 @@ function log(ctx) {
     const req = ctx.request
     fs.appendFile(path.join(__dirname, 'log.log'),`
         时间: ${new Date()};
-        接口:${req.url};
-        来源: ${ctx.request.header.origin};
+        接口: ${req.url};
+        origin: ${req.headers.origin};
+        `, () => {})
+}
+function comingLog(ctx) {
+    const req = ctx.request
+    fs.appendFile(path.join(__dirname, 'coming.log'),`
+        时间: ${new Date()};
+        接口: ${req.url};
+        来源: ${req.headers['x-forwarded-for']};
         `, () => {})
 }
 
@@ -55,4 +63,5 @@ module.exports = {
     getPage,
     getAllPages,
     log,
+    comingLog,
 }

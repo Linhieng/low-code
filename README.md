@@ -31,11 +31,6 @@ $ npm run serve
 * axios
 * easy-file-uploader
 
-## TODO
-
-项目完成后根据根据拥有的配置项，来对 StyleConfig.vue 组件进行重构。
-
-
 ## 相关文件介绍
 
 ### stores
@@ -46,3 +41,24 @@ $ npm run serve
 * `drawData` 低代码组件的核心数据存储，创建的组件和对应的配置都存储在 drawData 中
 * `drawConfig` 存储页面的配置，比如是否开启 “高度自动适应”，当前是否是 “预览” 状态。
 * `workPlaceRefs` 存储了页面的 DOM 元素。因为各个 DOM 之间是模块化的，有时候想要操作其他的 vue 文件中的 dom，可以通过 workPlaceRefs 来获取到。但目前来看，也没有经常用到。
+
+## 服务器的 nginx 配置
+
+```conf
+server {
+    listen		8001;
+    location ~ /(js|css)/.* {
+        root /usr/8001/;
+        try_files $uri 404;
+    }
+    location ~ /page/.* {
+        root /usr/8001;
+        try_files  /index.html 404;
+    }
+    location / {
+        proxy_pass	http://127.0.0.1:10001;
+        proxy_set_header    X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header    X-Real-IP $remote_addr;
+    }
+}
+```

@@ -2,8 +2,9 @@ const KoaRouter = require('koa-router')
 const multer = require('@koa/multer')
 const { FileUploaderServer } = require('easy-file-uploader-server')
 
+const fs = require('fs')
 const path = require('path')
-const {addPage, getPage, getAllPages, log} = require('./util')
+const { addPage, getPage, getAllPages, log, comingLog } = require('./util')
 
 const upload = multer()
 const router = KoaRouter()
@@ -13,6 +14,21 @@ const fileUploader = new FileUploaderServer({
   mergedFileLocation: path.join(__dirname, './public/mergedUploadFile'),
 })
 
+router.use(async (ctx, next) => {
+  log(ctx)
+  await next()
+})
+
+async function getHtml (ctx, next) {
+  comingLog(ctx)
+  ctx.response.type = 'text/html'
+  ctx.response.body = fs.readFileSync('/usr/8001/index.html', 'utf8')
+  await next()
+}
+router.get('/', getHtml)
+router.get('/work-place', getHtml)
+
+/* ==== */
 router.post('/api/initUpload', async (ctx, next) => {
   const { name } = ctx.request.body
   const uploadId = await fileUploader.initFilePartUpload(name)
@@ -39,7 +55,7 @@ router.post('/api/finishUpload', async (ctx, next) => {
 // NOTE: 后台代码，现在只要求 “能跑就行”
 
 router.post('/api/uploadPage', async (ctx, next) => {
-  log(ctx)
+  // log(ctx)
   try {
     const id = addPage(JSON.stringify(ctx.request.body))
     ctx.status = 200
